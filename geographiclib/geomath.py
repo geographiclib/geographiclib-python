@@ -14,7 +14,7 @@
 import sys
 import math
 
-class Math(object):
+class Math:
   """
   Additional math routines for GeographicLib.
 
@@ -34,19 +34,20 @@ class Math(object):
   inf = float("inf") if sys.version_info > (2, 6) else 2 * maxval
   nan = float("nan") if sys.version_info > (2, 6) else inf - inf
 
+  @staticmethod
   def sq(x):
     """Square a number"""
 
     return x * x
-  sq = staticmethod(sq)
 
+  @staticmethod
   def cbrt(x):
     """Real cube root of a number"""
 
     y = math.pow(abs(x), 1/3.0)
     return y if x > 0 else (-y if x < 0 else x)
-  cbrt = staticmethod(cbrt)
 
+  @staticmethod
   def log1p(x):
     """log(1 + x) accurate for small x (missing from python 2.5.2)"""
 
@@ -60,8 +61,8 @@ class Math(object):
     # a good approximation to the true log(1 + x)/x.  The multiplication x *
     # (log(y)/z) introduces little additional error.
     return x if z == 0 else x * math.log(y) / z
-  log1p = staticmethod(log1p)
 
+  @staticmethod
   def atanh(x):
     """atanh(x) (missing from python 2.5.2)"""
 
@@ -71,8 +72,8 @@ class Math(object):
     y = abs(x)                  # Enforce odd parity
     y = Math.log1p(2 * y/(1 - y))/2
     return y if x > 0 else (-y if x < 0 else x)
-  atanh = staticmethod(atanh)
 
+  @staticmethod
   def copysign(x, y):
     """return x with the sign of y (missing from python 2.5.2)"""
 
@@ -80,8 +81,8 @@ class Math(object):
       return math.copysign(x, y)
 
     return math.fabs(x) * (-1 if y < 0 or (y == 0 and 1/y < 0) else 1)
-  copysign = staticmethod(copysign)
 
+  @staticmethod
   def norm(x, y):
     """Private: Normalize a two-vector."""
     r = (math.sqrt(Math.sq(x) + Math.sq(y))
@@ -92,8 +93,8 @@ class Math(object):
          if (3, 8) <= sys.version_info < (3, 10)
          else math.hypot(x, y))
     return x/r, y/r
-  norm = staticmethod(norm)
 
+  @staticmethod
   def sum(u, v):
     """Error free transformation of a sum."""
     # Error free transformation of a sum.  Note that t can be the same as one
@@ -107,8 +108,8 @@ class Math(object):
     # u + v =       s      + t
     #       = round(u + v) + t
     return s, t
-  sum = staticmethod(sum)
 
+  @staticmethod
   def polyval(N, p, s, x):
     """Evaluate a polynomial."""
     y = float(0 if N < 0 else p[s]) # make sure the returned value is a float
@@ -116,8 +117,8 @@ class Math(object):
       N -= 1; s += 1
       y = y * x + p[s]
     return y
-  polyval = staticmethod(polyval)
 
+  @staticmethod
   def AngRound(x):
     """Private: Round an angle so that small values underflow to zero."""
     # The makes the smallest gap in x = 1/16 - nextafter(1/16, 0) = 1/2^57
@@ -130,8 +131,8 @@ class Math(object):
     # The compiler mustn't "simplify" z - (z - y) to y
     if y < z: y = z - (z - y)
     return 0.0 if x == 0 else (-y if x < 0 else y)
-  AngRound = staticmethod(AngRound)
 
+  @staticmethod
   def remainder(x, y):
     """remainder of x/y in the range [-y/2, y/2]."""
     z = math.fmod(x, y) if Math.isfinite(x) else Math.nan
@@ -141,29 +142,29 @@ class Math(object):
     z = x if x == 0 else z
     return (z + y if z < -y/2 else
             (z if z < y/2 else z -y))
-  remainder = staticmethod(remainder)
 
+  @staticmethod
   def AngNormalize(x):
     """reduce angle to (-180,180]"""
 
     y = Math.remainder(x, 360)
     return 180 if y == -180 else y
-  AngNormalize = staticmethod(AngNormalize)
 
+  @staticmethod
   def LatFix(x):
     """replace angles outside [-90,90] by NaN"""
 
     return Math.nan if abs(x) > 90 else x
-  LatFix = staticmethod(LatFix)
 
+  @staticmethod
   def AngDiff(x, y):
     """compute y - x and reduce to [-180,180] accurately"""
 
     d, t = Math.sum(Math.AngNormalize(-x), Math.AngNormalize(y))
     d = Math.AngNormalize(d)
     return Math.sum(-180 if d == 180 and t > 0 else d, t)
-  AngDiff = staticmethod(AngDiff)
 
+  @staticmethod
   def sincosd(x):
     """Compute sine and cosine of x in degrees."""
 
@@ -184,8 +185,8 @@ class Math(object):
     # AngNormalize has a similar fix.
     s, c = (x, c) if x == 0 else (0.0+s, 0.0+c)
     return s, c
-  sincosd = staticmethod(sincosd)
 
+  @staticmethod
   def atan2d(y, x):
     """compute atan2(y, x) with the result in degrees"""
 
@@ -203,16 +204,15 @@ class Math(object):
     elif q == 3:
       ang = -90 + ang
     return ang
-  atan2d = staticmethod(atan2d)
 
+  @staticmethod
   def isfinite(x):
     """Test for finiteness"""
 
     return abs(x) <= Math.maxval
-  isfinite = staticmethod(isfinite)
 
+  @staticmethod
   def isnan(x):
     """Test if nan"""
 
     return math.isnan(x) if sys.version_info > (2, 6) else x != x
-  isnan = staticmethod(isnan)

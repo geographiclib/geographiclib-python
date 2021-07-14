@@ -60,7 +60,7 @@ import math
 from geographiclib.geomath import Math
 from geographiclib.geodesiccapability import GeodesicCapability
 
-class GeodesicLine(object):
+class GeodesicLine:
   """Points on a geodesic path"""
 
   def __init__(self, geod, lat1, lon1, azi1,

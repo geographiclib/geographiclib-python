@@ -82,7 +82,7 @@ from geographiclib.geomath import Math
 from geographiclib.constants import Constants
 from geographiclib.geodesiccapability import GeodesicCapability
 
-class Geodesic(object):
+class Geodesic:
   """Solve geodesic problems"""
 
   GEOGRAPHICLIB_GEODESIC_ORDER = 6
@@ -118,6 +118,7 @@ class Geodesic(object):
   OUT_ALL  = GeodesicCapability.OUT_ALL
   OUT_MASK = GeodesicCapability.OUT_MASK
 
+  @staticmethod
   def _SinCosSeries(sinp, sinx, cosx, c):
     """Private: Evaluate a trig series using Clenshaw summation."""
     # Evaluate
@@ -142,8 +143,8 @@ class Geodesic(object):
       k -= 1; y0 = ar * y1 - y0 + c[k]
     return ( 2 * sinx * cosx * y0 if sinp # sin(2 * x) * y0
              else cosx * (y0 - y1) )      # cos(x) * (y0 - y1)
-  _SinCosSeries = staticmethod(_SinCosSeries)
 
+  @staticmethod
   def _Astroid(x, y):
     """Private: solve astroid equation."""
     # Solve k^4+2*k^3-(x^2+y^2-1)*k^2-2*y^2*k-y^2 = 0 for positive root k.
@@ -189,8 +190,8 @@ class Geodesic(object):
       # for y small, positive root is k = abs(y)/sqrt(1-x^2)
       k = 0
     return k
-  _Astroid = staticmethod(_Astroid)
 
+  @staticmethod
   def _A1m1f(eps):
     """Private: return A1-1."""
     coeff = [
@@ -199,8 +200,8 @@ class Geodesic(object):
     m = Geodesic.nA1_//2
     t = Math.polyval(m, coeff, 0, Math.sq(eps)) / coeff[m + 1]
     return (t + eps) / (1 - eps)
-  _A1m1f = staticmethod(_A1m1f)
 
+  @staticmethod
   def _C1f(eps, c):
     """Private: return C1."""
     coeff = [
@@ -219,8 +220,8 @@ class Geodesic(object):
       c[l] = d * Math.polyval(m, coeff, o, eps2) / coeff[o + m + 1]
       o += m + 2
       d *= eps
-  _C1f = staticmethod(_C1f)
 
+  @staticmethod
   def _C1pf(eps, c):
     """Private: return C1'"""
     coeff = [
@@ -239,8 +240,8 @@ class Geodesic(object):
       c[l] = d * Math.polyval(m, coeff, o, eps2) / coeff[o + m + 1]
       o += m + 2
       d *= eps
-  _C1pf = staticmethod(_C1pf)
 
+  @staticmethod
   def _A2m1f(eps):
     """Private: return A2-1"""
     coeff = [
@@ -249,8 +250,8 @@ class Geodesic(object):
     m = Geodesic.nA2_//2
     t = Math.polyval(m, coeff, 0, Math.sq(eps)) / coeff[m + 1]
     return (t - eps) / (1 + eps)
-  _A2m1f = staticmethod(_A2m1f)
 
+  @staticmethod
   def _C2f(eps, c):
     """Private: return C2"""
     coeff = [
@@ -269,7 +270,6 @@ class Geodesic(object):
       c[l] = d * Math.polyval(m, coeff, o, eps2) / coeff[o + m + 1]
       o += m + 2
       d *= eps
-  _C2f = staticmethod(_C2f)
 
   def __init__(self, a, f):
     """Construct a Geodesic object

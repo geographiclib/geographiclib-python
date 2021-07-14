@@ -11,7 +11,7 @@
 # https://geographiclib.sourceforge.io/
 ######################################################################
 
-class Constants(object):
+class Constants:
   """
   Constants describing the WGS84 ellipsoid
   """

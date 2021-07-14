@@ -47,10 +47,12 @@ The public attributes for this class are
 import math
 from geographiclib.geomath import Math
 from geographiclib.accumulator import Accumulator
+from geographiclib.geodesic import Geodesic
 
-class PolygonArea(object):
+class PolygonArea:
   """Area of a geodesic polygon"""
 
+  @staticmethod
   def _transit(lon1, lon2):
     """Count crossings of prime meridian for AddPoint."""
     # Return 1 or -1 if crossing prime meridian in east or west direction.
@@ -59,11 +61,11 @@ class PolygonArea(object):
     lon1 = Math.AngNormalize(lon1)
     lon2 = Math.AngNormalize(lon2)
     lon12, _ = Math.AngDiff(lon1, lon2)
-    cross = (1 if lon1 <= 0 and lon2 > 0 and lon12 > 0
-             else (-1 if lon2 <= 0 and lon1 > 0 and lon12 < 0 else 0))
+    cross = (1 if lon1 <= 0 < lon2 and lon12 > 0
+             else (-1 if lon2 <= 0 < lon1 and lon12 < 0 else 0))
     return cross
-  _transit = staticmethod(_transit)
 
+  @staticmethod
   def _transitdirect(lon1, lon2):
     """Count crossings of prime meridian for AddEdge."""
     # We want to compute exactly
@@ -71,10 +73,10 @@ class PolygonArea(object):
     # Since we only need the parity of the result we can use std::remquo but
     # this is buggy with g++ 4.8.3 and requires C++11.  So instead we do
     lon1 = math.fmod(lon1, 720.0); lon2 = math.fmod(lon2, 720.0)
-    return ( (1 if ((lon2 <= 0 and lon2 > -360) or lon2 > 360) else 0) -
-             (1 if ((lon1 <= 0 and lon1 > -360) or lon1 > 360) else 0) )
-  _transitdirect = staticmethod(_transitdirect)
+    return ( (1 if (-360 < lon2 <= 0 or lon2 > 360) else 0) -
+             (1 if (-360 < lon1 <= 0 or lon1 > 360) else 0) )
 
+  @staticmethod
   def _areareduceA(area, area0, crossings, reverse, sign):
     """Reduce accumulator area to allowed range."""
     area.Remainder(area0)
@@ -96,8 +98,8 @@ class PolygonArea(object):
         area.Add(  area0 )
 
     return 0.0 + area.Sum()
-  _areareduceA = staticmethod(_areareduceA)
 
+  @staticmethod
   def _areareduceB(area, area0, crossings, reverse, sign):
     """Reduce double area to allowed range."""
     area = Math.remainder(area, area0)
@@ -119,7 +121,6 @@ class PolygonArea(object):
         area += area0
 
     return 0.0 + area
-  _areareduceB = staticmethod(_areareduceB)
 
   def __init__(self, earth, polyline = False):
     """Construct a PolygonArea object
@@ -130,7 +131,6 @@ class PolygonArea(object):
     Initially the polygon has no vertices.
     """
 
-    from geographiclib.geodesic import Geodesic
     self.earth = earth
     """The geodesic object (readonly)"""
     self.polyline = polyline
@@ -149,7 +149,8 @@ class PolygonArea(object):
     """The current latitude in degrees (readonly)"""
     self.lon1 = Math.nan
     """The current longitude in degrees (readonly)"""
-    self.Clear()
+    self._crossings = 0
+    self._lat0 = self._lon0 = Math.nan
 
   def Clear(self):
     """Reset to empty polygon."""

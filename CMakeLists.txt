@@ -9,6 +9,8 @@ if (PROJECT_VERSION_PATCH GREATER 0)
   set (PROJECT_VERSION "${PROJECT_VERSION}.${PROJECT_VERSION_PATCH}")
 endif ()
 
+set (RELEASE_DATE "2021-mm-dd")
+
 cmake_minimum_required (VERSION 3.13.0)
 
 # Set a default build type for single-configuration cmake generators if
@@ -17,20 +19,56 @@ if (NOT CMAKE_CONFIGURATION_TYPES AND NOT CMAKE_BUILD_TYPE)
   set (CMAKE_BUILD_TYPE Release)
 endif ()
 
+configure_file (setup.py.in setup.py @ONLY)
+set (EXTRA_FILES README.md LICENSE MANIFEST.in)
+foreach (f ${EXTRA_FILES})
+  configure_file (${f} ${f} COPYONLY)
+endforeach ()
+
+find_package (Python ${Python_VERSION_NUMBER} COMPONENTS Interpreter)
+message (STATUS "Python found: ${Python_EXECUTABLE}")
+
+# Set source files here since they are used in multiple places
+set (PYTHON_FILES
+  accumulator.py constants.py geodesiccapability.py
+  geodesicline.py geodesic.py geomath.py polygonarea.py)
+set (TEST_FILES
+  test/__init__.py test/test_geodesic.py)
+
 add_subdirectory (geographiclib)
 
 enable_testing ()
 # Run the test suite
-add_test (NAME python2
-  COMMAND python2 -m unittest -v geographiclib.test.test_geodesic
-  WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
-add_test (NAME python3
-  COMMAND python3 -m unittest -v geographiclib.test.test_geodesic
-  WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
+add_test (NAME testsuite
+  COMMAND ${Python_EXECUTABLE} -m unittest -v geographiclib.test.test_geodesic)
 
-# The documentation depends on doxygen.
-if (BUILD_DOCUMENTATION)
-  # For Python documentation
-  find_program (SPHINX sphinx-build REQUIRED)
+# For Python documentation
+find_program (SPHINX sphinx-build)
+if (SPHINX)
   add_subdirectory (doc)
 endif ()
+
+if (Python_VERSION VERSION_GREATER_EQUAL 3)
+  set (BINARY_WHEEL bdist_wheel) # Not available with Python 2.x
+endif ()
+
+set (ALLDEPENDS)
+foreach (f __init__.py ${PYTHON_FILES} ${TEST_FILES})
+  set (ALLDEPENDS
+    ${ALLDEPENDS} "${CMAKE_CURRENT_BINARY_DIR}/geographiclib/${f}")
+endforeach  ()
+set (PACKAGE dist/geographiclib-${PROJECT_VERSION}.tar.gz)
+
+add_custom_command (OUTPUT ${PACKAGE}
+  COMMAND ${Python_EXECUTABLE} setup.py -q sdist ${BINARY_WHEEL}
+  DEPENDS ${ALLDEPENDS}
+  COMMENT "Creating package")
+
+add_custom_target (package ALL DEPENDS ${PACKAGE})
+
+set (INSTALL_COMMAND
+  "-m pip install -q --prefix ${CMAKE_INSTALL_PREFIX} ${PACKAGE}")
+install (CODE
+  "message (STATUS \"python ${INSTALL_COMMAND}\")")
+install (CODE
+  "execute_process(COMMAND ${Python_EXECUTABLE} ${INSTALL_COMMAND})")

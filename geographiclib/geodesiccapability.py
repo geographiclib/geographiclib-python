@@ -12,7 +12,7 @@
 # https://geographiclib.sourceforge.io/
 ######################################################################
 
-class GeodesicCapability(object):
+class GeodesicCapability:
   """
   Capability constants shared between Geodesic and GeodesicLine.
   """
