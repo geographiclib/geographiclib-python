@@ -30,6 +30,7 @@ if (LINT)
     # R0124 comparison with self (needed for nan test)
     # W0212 access to a protected member
     -d C0321,C0325,C0415,R0124,W0212
-    __init__.py ${PYTHON_FILES} ${TEST_FILES})
+    __init__.py ${PYTHON_FILES} ${TEST_FILES}
+    COMMENT "Linting with ${LINT}")
 endif ()
 

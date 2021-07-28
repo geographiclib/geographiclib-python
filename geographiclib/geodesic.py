@@ -726,7 +726,7 @@ class Geodesic:
     lat2 = Math.AngRound(Math.LatFix(lat2))
     # Swap points so that point with higher (abs) latitude is point 1
     # If one latitude is a nan, then it becomes lat1.
-    swapp = -1 if abs(lat1) < abs(lat2) else 1
+    swapp = -1 if abs(lat1) < abs(lat2) or Math.isnan(lat2) else 1
     if swapp < 0:
       lonsign *= -1
       lat2, lat1 = lat1, lat2

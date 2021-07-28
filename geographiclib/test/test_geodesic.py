@@ -558,6 +558,14 @@ class GeodSolveTest(unittest.TestCase):
     self.assertAlmostEqual(inv["azi2"], 90.00000106, delta = 1e-7  )
     self.assertAlmostEqual(inv["s12"],   0.264,      delta = 0.5e-3)
 
+  def test_GeodSolve94(self):
+    """Check fix for lat2 = nan being treated as lat2 = 0 (bug found
+       2021-07-26)"""
+    inv = Geodesic.WGS84.Inverse(0, 0, Math.nan, 90)
+    self.assertTrue(Math.isnan(inv["azi1"]))
+    self.assertTrue(Math.isnan(inv["azi2"]))
+    self.assertTrue(Math.isnan(inv["s12"]))
+
 class PlanimeterTest(unittest.TestCase):
   """Planimeter tests"""
 
