@@ -1,9 +1,10 @@
 """Geodesic tests"""
 
 import unittest
+import math
 
-from geographiclib.geodesic import Geodesic
 from geographiclib.geomath import Math
+from geographiclib.geodesic import Geodesic
 
 class GeodesicTest(unittest.TestCase):
   """Geodesic test suite"""
@@ -171,7 +172,7 @@ class GeodSolveTest(unittest.TestCase):
   def test_GeodSolve4(self):
     """Check fix for short line bug found 2010-05-21"""
     inv = Geodesic.WGS84.Inverse(36.493349428792, 0,
-                   36.49334942879201, 0.0000008)
+                                 36.49334942879201, 0.0000008)
     self.assertAlmostEqual(inv["s12"], 0.072, delta = 0.5e-3)
 
   def test_GeodSolve5(self):
@@ -189,36 +190,33 @@ class GeodSolveTest(unittest.TestCase):
     """Check fix for volatile sbet12a bug found 2011-06-25 (gcc 4.4.4
     x86 -O3).  Found again on 2012-03-27 with tdm-mingw32 (g++ 4.6.1)."""
     inv = Geodesic.WGS84.Inverse(88.202499451857, 0,
-                   -88.202499451857, 179.981022032992859592)
+                                 -88.202499451857, 179.981022032992859592)
     self.assertAlmostEqual(inv["s12"], 20003898.214, delta = 0.5e-3)
     inv = Geodesic.WGS84.Inverse(89.262080389218, 0,
-                   -89.262080389218, 179.992207982775375662)
+                                 -89.262080389218, 179.992207982775375662)
     self.assertAlmostEqual(inv["s12"], 20003925.854, delta = 0.5e-3)
     inv = Geodesic.WGS84.Inverse(89.333123580033, 0,
-                   -89.333123580032997687,
-                   179.99295812360148422)
+                                 -89.333123580032997687, 179.99295812360148422)
     self.assertAlmostEqual(inv["s12"], 20003926.881, delta = 0.5e-3)
 
   def test_GeodSolve9(self):
     """Check fix for volatile x bug found 2011-06-25 (gcc 4.4.4 x86 -O3)"""
     inv = Geodesic.WGS84.Inverse(56.320923501171, 0,
-                   -56.320923501171, 179.664747671772880215)
+                                 -56.320923501171, 179.664747671772880215)
     self.assertAlmostEqual(inv["s12"], 19993558.287, delta = 0.5e-3)
 
   def test_GeodSolve10(self):
     """Check fix for adjust tol1_ bug found 2011-06-25 (Visual Studio
     10 rel + debug)"""
     inv = Geodesic.WGS84.Inverse(52.784459512564, 0,
-                   -52.784459512563990912,
-                   179.634407464943777557)
+                                 -52.784459512563990912, 179.634407464943777557)
     self.assertAlmostEqual(inv["s12"], 19991596.095, delta = 0.5e-3)
 
   def test_GeodSolve11(self):
     """Check fix for bet2 = -bet1 bug found 2011-06-25 (Visual Studio
     10 rel + debug)"""
     inv = Geodesic.WGS84.Inverse(48.522876735459, 0,
-                   -48.52287673545898293,
-                   179.599720456223079643)
+                                 -48.52287673545898293, 179.599720456223079643)
     self.assertAlmostEqual(inv["s12"], 19989144.774, delta = 0.5e-3)
 
   def test_GeodSolve12(self):
@@ -234,9 +232,9 @@ class GeodSolveTest(unittest.TestCase):
   def test_GeodSolve14(self):
     """Check fix for inverse ignoring lon12 = nan"""
     inv = Geodesic.WGS84.Inverse(0, 0, 1, Math.nan)
-    self.assertTrue(Math.isnan(inv["azi1"]))
-    self.assertTrue(Math.isnan(inv["azi2"]))
-    self.assertTrue(Math.isnan(inv["s12"]))
+    self.assertTrue(math.isnan(inv["azi1"]))
+    self.assertTrue(math.isnan(inv["azi2"]))
+    self.assertTrue(math.isnan(inv["s12"]))
 
   def test_GeodSolve15(self):
     """Initial implementation of Math::eatanhe was wrong for e^2 < 0.  This
@@ -346,13 +344,13 @@ class GeodSolveTest(unittest.TestCase):
     """Check fix for nan + point on equator or pole not returning all nans in
     Geodesic::Inverse, found 2015-09-23."""
     inv = Geodesic.WGS84.Inverse(Math.nan, 0, 0, 90)
-    self.assertTrue(Math.isnan(inv["azi1"]))
-    self.assertTrue(Math.isnan(inv["azi2"]))
-    self.assertTrue(Math.isnan(inv["s12"]))
+    self.assertTrue(math.isnan(inv["azi1"]))
+    self.assertTrue(math.isnan(inv["azi2"]))
+    self.assertTrue(math.isnan(inv["s12"]))
     inv = Geodesic.WGS84.Inverse(Math.nan, 0, 90, 9)
-    self.assertTrue(Math.isnan(inv["azi1"]))
-    self.assertTrue(Math.isnan(inv["azi2"]))
-    self.assertTrue(Math.isnan(inv["s12"]))
+    self.assertTrue(math.isnan(inv["azi1"]))
+    self.assertTrue(math.isnan(inv["azi2"]))
+    self.assertTrue(math.isnan(inv["s12"]))
 
   def test_GeodSolve59(self):
     """Check for points close with longitudes close to 180 deg apart."""
@@ -440,7 +438,7 @@ class GeodSolveTest(unittest.TestCase):
     self.assertAlmostEqual(direct["lat2"], 81.04623, delta = 0.5e-5)
     self.assertAlmostEqual(direct["lon2"], -170, delta = 0.5e-5)
     self.assertAlmostEqual(direct["azi2"], 0, delta = 0.5e-5)
-    self.assertTrue(Math.copysign(1, direct["azi2"]) > 0)
+    self.assertTrue(math.copysign(1, direct["azi2"]) > 0)
 
   def test_GeodSolve74(self):
     """Check fix for inaccurate areas, bug introduced in v1.46, fixed
@@ -493,9 +491,9 @@ class GeodSolveTest(unittest.TestCase):
     self.assertAlmostEqual(inv["M12"], 1, delta = 1e-15)
     self.assertAlmostEqual(inv["M21"], 1, delta = 1e-15)
     self.assertAlmostEqual(inv["S12"], 0, delta = 1e-10)
-    self.assertTrue(Math.copysign(1, inv["a12"]) > 0)
-    self.assertTrue(Math.copysign(1, inv["s12"]) > 0)
-    self.assertTrue(Math.copysign(1, inv["m12"]) > 0)
+    self.assertTrue(math.copysign(1, inv["a12"]) > 0)
+    self.assertTrue(math.copysign(1, inv["s12"]) > 0)
+    self.assertTrue(math.copysign(1, inv["m12"]) > 0)
 
     inv = Geodesic.WGS84.Inverse(90, 0, 90, 180, Geodesic.ALL)
     self.assertAlmostEqual(inv["a12"], 0, delta = 1e-13)
@@ -510,43 +508,43 @@ class GeodSolveTest(unittest.TestCase):
     # An incapable line which can't take distance as input
     line = Geodesic.WGS84.Line(1, 2, 90, Geodesic.LATITUDE)
     direct = line.Position(1000, Geodesic.EMPTY)
-    self.assertTrue(Math.isnan(direct["a12"]))
+    self.assertTrue(math.isnan(direct["a12"]))
 
   def test_GeodSolve84(self):
     """Tests for python implementation to check fix for range errors with
     {fmod,sin,cos}(inf) (includes GeodSolve84 - GeodSolve91)."""
     direct = Geodesic.WGS84.Direct(0, 0, 90, Math.inf)
-    self.assertTrue(Math.isnan(direct["lat2"]))
-    self.assertTrue(Math.isnan(direct["lon2"]))
-    self.assertTrue(Math.isnan(direct["azi2"]))
+    self.assertTrue(math.isnan(direct["lat2"]))
+    self.assertTrue(math.isnan(direct["lon2"]))
+    self.assertTrue(math.isnan(direct["azi2"]))
     direct = Geodesic.WGS84.Direct(0, 0, 90, Math.nan)
-    self.assertTrue(Math.isnan(direct["lat2"]))
-    self.assertTrue(Math.isnan(direct["lon2"]))
-    self.assertTrue(Math.isnan(direct["azi2"]))
+    self.assertTrue(math.isnan(direct["lat2"]))
+    self.assertTrue(math.isnan(direct["lon2"]))
+    self.assertTrue(math.isnan(direct["azi2"]))
     direct = Geodesic.WGS84.Direct(0, 0, Math.inf, 1000)
-    self.assertTrue(Math.isnan(direct["lat2"]))
-    self.assertTrue(Math.isnan(direct["lon2"]))
-    self.assertTrue(Math.isnan(direct["azi2"]))
+    self.assertTrue(math.isnan(direct["lat2"]))
+    self.assertTrue(math.isnan(direct["lon2"]))
+    self.assertTrue(math.isnan(direct["azi2"]))
     direct = Geodesic.WGS84.Direct(0, 0, Math.nan, 1000)
-    self.assertTrue(Math.isnan(direct["lat2"]))
-    self.assertTrue(Math.isnan(direct["lon2"]))
-    self.assertTrue(Math.isnan(direct["azi2"]))
+    self.assertTrue(math.isnan(direct["lat2"]))
+    self.assertTrue(math.isnan(direct["lon2"]))
+    self.assertTrue(math.isnan(direct["azi2"]))
     direct = Geodesic.WGS84.Direct(0, Math.inf, 90, 1000)
     self.assertTrue(direct["lat1"] == 0)
-    self.assertTrue(Math.isnan(direct["lon2"]))
+    self.assertTrue(math.isnan(direct["lon2"]))
     self.assertTrue(direct["azi2"] == 90)
     direct = Geodesic.WGS84.Direct(0, Math.nan, 90, 1000)
     self.assertTrue(direct["lat1"] == 0)
-    self.assertTrue(Math.isnan(direct["lon2"]))
+    self.assertTrue(math.isnan(direct["lon2"]))
     self.assertTrue(direct["azi2"] == 90)
     direct = Geodesic.WGS84.Direct(Math.inf, 0, 90, 1000)
-    self.assertTrue(Math.isnan(direct["lat2"]))
-    self.assertTrue(Math.isnan(direct["lon2"]))
-    self.assertTrue(Math.isnan(direct["azi2"]))
+    self.assertTrue(math.isnan(direct["lat2"]))
+    self.assertTrue(math.isnan(direct["lon2"]))
+    self.assertTrue(math.isnan(direct["azi2"]))
     direct = Geodesic.WGS84.Direct(Math.nan, 0, 90, 1000)
-    self.assertTrue(Math.isnan(direct["lat2"]))
-    self.assertTrue(Math.isnan(direct["lon2"]))
-    self.assertTrue(Math.isnan(direct["azi2"]))
+    self.assertTrue(math.isnan(direct["lat2"]))
+    self.assertTrue(math.isnan(direct["lon2"]))
+    self.assertTrue(math.isnan(direct["azi2"]))
 
   def test_GeodSolve92(self):
     """Check fix for inaccurate hypot with python 3.[89].  Problem reported
@@ -562,9 +560,9 @@ class GeodSolveTest(unittest.TestCase):
     """Check fix for lat2 = nan being treated as lat2 = 0 (bug found
        2021-07-26)"""
     inv = Geodesic.WGS84.Inverse(0, 0, Math.nan, 90)
-    self.assertTrue(Math.isnan(inv["azi1"]))
-    self.assertTrue(Math.isnan(inv["azi2"]))
-    self.assertTrue(Math.isnan(inv["s12"]))
+    self.assertTrue(math.isnan(inv["azi1"]))
+    self.assertTrue(math.isnan(inv["azi2"]))
+    self.assertTrue(math.isnan(inv["s12"]))
 
 class PlanimeterTest(unittest.TestCase):
   """Planimeter tests"""
@@ -610,7 +608,7 @@ class PlanimeterTest(unittest.TestCase):
     self.assertAlmostEqual(area, 63758202715511.0, delta = 1)
     _, perimeter, area = PlanimeterTest.PolyLength(points)
     self.assertAlmostEqual(perimeter, 20020719, delta = 1)
-    self.assertTrue(Math.isnan(area))
+    self.assertTrue(math.isnan(area))
 
   def test_Planimeter5(self):
     """Check fix for Planimeter pole crossing bug found 2011-06-24"""
@@ -662,8 +660,7 @@ class PlanimeterTest(unittest.TestCase):
     PlanimeterTest.polygon.Clear()
     PlanimeterTest.polygon.AddPoint(lat[0], lon[0])
     PlanimeterTest.polygon.AddPoint(lat[1], lon[1])
-    _, _, area = PlanimeterTest.polygon.TestPoint(lat[2], lon[2],
-                                                          False, True)
+    _, _, area = PlanimeterTest.polygon.TestPoint(lat[2], lon[2], False, True)
     self.assertAlmostEqual(area, r, delta = 0.5)
     _, _, area = PlanimeterTest.polygon.TestPoint(lat[2], lon[2], False, False)
     self.assertAlmostEqual(area, r, delta = 0.5)
@@ -699,14 +696,12 @@ class PlanimeterTest(unittest.TestCase):
     _, perimeter, area = PlanimeterTest.polygon.Compute(False, True)
     self.assertTrue(area == 0)
     self.assertTrue(perimeter == 0)
-    _, perimeter, area = PlanimeterTest.polygon.TestPoint(1, 1,
-                                                            False, True)
+    _, perimeter, area = PlanimeterTest.polygon.TestPoint(1, 1, False, True)
     self.assertTrue(area == 0)
     self.assertTrue(perimeter == 0)
-    _, perimeter, area = PlanimeterTest.polygon.TestEdge(90, 1000,
-                                                           False, True)
-    self.assertTrue(Math.isnan(area))
-    self.assertTrue(Math.isnan(perimeter))
+    _, perimeter, area = PlanimeterTest.polygon.TestEdge(90, 1000, False, True)
+    self.assertTrue(math.isnan(area))
+    self.assertTrue(math.isnan(perimeter))
     PlanimeterTest.polygon.AddPoint(1, 1)
     _, perimeter, area = PlanimeterTest.polygon.Compute(False, True)
     self.assertTrue(area == 0)
@@ -714,21 +709,17 @@ class PlanimeterTest(unittest.TestCase):
     PlanimeterTest.polyline.Clear()
     _, perimeter, area = PlanimeterTest.polyline.Compute(False, True)
     self.assertTrue(perimeter == 0)
-    _, perimeter, area = PlanimeterTest.polyline.TestPoint(1, 1,
-                                                             False, True)
+    _, perimeter, area = PlanimeterTest.polyline.TestPoint(1, 1, False, True)
     self.assertTrue(perimeter == 0)
-    _, perimeter, area = PlanimeterTest.polyline.TestEdge(90, 1000,
-                                                            False, True)
-    self.assertTrue(Math.isnan(perimeter))
+    _, perimeter, area = PlanimeterTest.polyline.TestEdge(90, 1000, False, True)
+    self.assertTrue(math.isnan(perimeter))
     PlanimeterTest.polyline.AddPoint(1, 1)
     _, perimeter, area = PlanimeterTest.polyline.Compute(False, True)
     self.assertTrue(perimeter == 0)
     PlanimeterTest.polygon.AddPoint(1, 1)
-    _, perimeter, area = PlanimeterTest.polyline.TestEdge(90, 1000,
-                                                            False, True)
+    _, perimeter, area = PlanimeterTest.polyline.TestEdge(90, 1000, False, True)
     self.assertAlmostEqual(perimeter, 1000, delta = 1e-10)
-    _, perimeter, area = PlanimeterTest.polyline.TestPoint(2, 2,
-                                                             False, True)
+    _, perimeter, area = PlanimeterTest.polyline.TestPoint(2, 2, False, True)
     self.assertAlmostEqual(perimeter, 156876.149, delta = 0.5e-3)
 
   def test_Planimeter21(self):

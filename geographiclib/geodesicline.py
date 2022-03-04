@@ -100,7 +100,7 @@ class GeodesicLine:
     """the latitude of the first point in degrees (readonly)"""
     self.lon1 = lon1
     """the longitude of the first point in degrees (readonly)"""
-    if Math.isnan(salp1) or Math.isnan(calp1):
+    if math.isnan(salp1) or math.isnan(calp1):
       self.azi1 = Math.AngNormalize(azi1)
       self.salp1, self.calp1 = Math.sincosd(Math.AngRound(azi1))
     else:
@@ -272,7 +272,7 @@ class GeodesicLine:
     if outmask & Geodesic.LONGITUDE:
       # tan(omg2) = sin(alp0) * tan(sig2)
       somg2 = self._salp0 * ssig2; comg2 = csig2 # No need to normalize
-      E = Math.copysign(1, self._salp0)          # East or west going?
+      E = math.copysign(1, self._salp0)          # East or west going?
       # omg12 = omg2 - omg1
       omg12 = (E * (sig12
                     - (math.atan2(          ssig2,       csig2) -

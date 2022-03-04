@@ -35,7 +35,7 @@ setuptools.setup(
   description = "The geodesic routines from GeographicLib",
   long_description = long_description,
   long_description_content_type = "text/markdown",
-  url = "https://geographiclib.sourceforge.io/" + version + "/python",
+  url = "https://geographiclib.sourceforge.io/Python/" + version,
   include_package_data = True,
   packages = setuptools.find_packages(),
   license = "MIT",

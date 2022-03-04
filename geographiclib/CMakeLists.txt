@@ -15,7 +15,7 @@ if (LINT)
     --max-args=15
     --max-locals=76
     --max-statements=175
-    --max-public-methods=30
+    --max-public-methods=32
     --min-public-methods=0
     --min-similarity-lines=9
     --argument-naming-style=any

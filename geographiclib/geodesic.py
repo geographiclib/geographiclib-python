@@ -78,6 +78,7 @@ The public attributes for this class are
 ######################################################################
 
 import math
+import sys
 from geographiclib.geomath import Math
 from geographiclib.constants import Constants
 from geographiclib.geodesiccapability import GeodesicCapability
@@ -98,10 +99,10 @@ class Geodesic:
   nC4_ = GEOGRAPHICLIB_GEODESIC_ORDER
   nC4x_ = (nC4_ * (nC4_ + 1)) // 2
   maxit1_ = 20
-  maxit2_ = maxit1_ + Math.digits + 10
+  maxit2_ = maxit1_ + sys.float_info.mant_dig + 10
 
-  tiny_ = math.sqrt(Math.minval)
-  tol0_ = Math.epsilon
+  tiny_ = math.sqrt(sys.float_info.min)
+  tol0_ = sys.float_info.epsilon
   tol1_ = 200 * tol0_
   tol2_ = math.sqrt(tol0_)
   tolb_ = tol0_ * tol2_
@@ -294,7 +295,7 @@ class Geodesic:
     # authalic radius squared
     self._c2 = (Math.sq(self.a) + Math.sq(self._b) *
                 (1 if self._e2 == 0 else
-                 (Math.atanh(math.sqrt(self._e2)) if self._e2 > 0 else
+                 (math.atanh(math.sqrt(self._e2)) if self._e2 > 0 else
                   math.atan(math.sqrt(-self._e2))) /
                  math.sqrt(abs(self._e2))))/2
     # The sig12 threshold for "really short".  Using the auxiliary sphere
@@ -537,10 +538,6 @@ class Geodesic:
       # Scale lam12 and bet2 to x, y coordinate system where antipodal point
       # is at origin and singular point is at y = 0, x = -1.
       # real y, lamscale, betscale
-      # Volatile declaration needed to fix inverse case
-      # 56.320923501171 0 -56.320923501171 179.664747671772880215
-      # which otherwise fails with g++ 4.4.4 x86 -O3
-      # volatile real x
       lam12x = math.atan2(-slam12, -clam12)
       if self.f >= 0:            # In fact f == 0 does not get here
         # x = dlong, y = dlat
@@ -726,7 +723,7 @@ class Geodesic:
     lat2 = Math.AngRound(Math.LatFix(lat2))
     # Swap points so that point with higher (abs) latitude is point 1
     # If one latitude is a nan, then it becomes lat1.
-    swapp = -1 if abs(lat1) < abs(lat2) or Math.isnan(lat2) else 1
+    swapp = -1 if abs(lat1) < abs(lat2) or math.isnan(lat2) else 1
     if swapp < 0:
       lonsign *= -1
       lat2, lat1 = lat1, lat2

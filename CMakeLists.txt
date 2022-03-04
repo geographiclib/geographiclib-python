@@ -8,8 +8,10 @@ set (PROJECT_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}")
 if (PROJECT_VERSION_PATCH GREATER 0)
   set (PROJECT_VERSION "${PROJECT_VERSION}.${PROJECT_VERSION_PATCH}")
 endif ()
+set (PROJECT_VERSION_SUFFIX "a0")
+set (PROJECT_VERSION "${PROJECT_VERSION}${PROJECT_VERSION_SUFFIX}")
 
-set (RELEASE_DATE "2021-mm-dd")
+set (RELEASE_DATE "2022-mm-dd")
 
 cmake_minimum_required (VERSION 3.13.0)
 
@@ -20,13 +22,14 @@ if (NOT CMAKE_CONFIGURATION_TYPES AND NOT CMAKE_BUILD_TYPE)
 endif ()
 
 configure_file (setup.py.in setup.py @ONLY)
-set (EXTRA_FILES README.md LICENSE MANIFEST.in)
+set (EXTRA_FILES setup.cfg README.md LICENSE MANIFEST.in)
 foreach (f ${EXTRA_FILES})
   configure_file (${f} ${f} COPYONLY)
 endforeach ()
 
 find_package (Python ${Python_VERSION_NUMBER} COMPONENTS Interpreter)
-message (STATUS "Python found: ${Python_EXECUTABLE}")
+message (STATUS
+  "Python found: ${Python_EXECUTABLE}, Version: ${Python_VERSION}")
 
 # Set source files here since they are used in multiple places
 set (PYTHON_FILES
@@ -48,26 +51,32 @@ if (SPHINX)
   add_subdirectory (doc)
 endif ()
 
-if (Python_VERSION VERSION_GREATER_EQUAL 3)
-  set (BINARY_WHEEL bdist_wheel) # Not available with Python 2.x
-endif ()
-
 set (ALLDEPENDS)
+foreach (f setup.py ${EXTRA_FILES})
+  set (ALLDEPENDS
+    ${ALLDEPENDS} "${CMAKE_CURRENT_BINARY_DIR}/${f}")
+endforeach  ()
 foreach (f __init__.py ${PYTHON_FILES} ${TEST_FILES})
   set (ALLDEPENDS
     ${ALLDEPENDS} "${CMAKE_CURRENT_BINARY_DIR}/geographiclib/${f}")
 endforeach  ()
-set (PACKAGE dist/geographiclib-${PROJECT_VERSION}.tar.gz)
 
-add_custom_command (OUTPUT ${PACKAGE}
-  COMMAND ${Python_EXECUTABLE} setup.py -q sdist ${BINARY_WHEEL}
+set (SDIST dist/geographiclib-${PROJECT_VERSION}.tar.gz)
+add_custom_command (OUTPUT ${SDIST}
+  COMMAND ${Python_EXECUTABLE} -m build --sdist
   DEPENDS ${ALLDEPENDS}
-  COMMENT "Creating package")
+  COMMENT "Creating source package")
 
-add_custom_target (package ALL DEPENDS ${PACKAGE})
+set (WHEEL dist/geographiclib-${PROJECT_VERSION}-py2.py3-none-any.whl)
+add_custom_command (OUTPUT ${WHEEL}
+  COMMAND ${Python_EXECUTABLE} -m build --wheel
+  DEPENDS ${ALLDEPENDS}
+  COMMENT "Creating wheel")
+
+add_custom_target (package ALL DEPENDS ${SDIST} ${WHEEL})
 
 set (INSTALL_COMMAND
-  "-m pip install -q --prefix ${CMAKE_INSTALL_PREFIX} ${PACKAGE}")
+  "-m pip install -q --prefix ${CMAKE_INSTALL_PREFIX} ${SDIST}")
 install (CODE
   "message (STATUS \"python ${INSTALL_COMMAND}\")")
 install (CODE
