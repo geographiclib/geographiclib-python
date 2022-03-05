@@ -664,11 +664,11 @@ class Geodesic:
     # Math.norm(somg2, comg2); -- don't need to normalize!
 
     # sig12 = sig2 - sig1, limit to [0, pi]
-    sig12 = math.atan2(max(0.0, csig1 * ssig2 - ssig1 * csig2),
+    sig12 = math.atan2(max(0.0, csig1 * ssig2 - ssig1 * csig2) + 0.0,
                                 csig1 * csig2 + ssig1 * ssig2)
 
     # omg12 = omg2 - omg1, limit to [0, pi]
-    somg12 = max(0.0, comg1 * somg2 - somg1 * comg2)
+    somg12 = max(0.0, comg1 * somg2 - somg1 * comg2) + 0.0
     comg12 =          comg1 * comg2 + somg1 * somg2
     # eta = omg12 - lam120
     eta = math.atan2(somg12 * clam120 - comg12 * slam120,
@@ -708,11 +708,11 @@ class Geodesic:
     # east-going and meridional geodesics.
     lon12, lon12s = Math.AngDiff(lon1, lon2)
     # Make longitude difference positive.
-    lonsign = 1 if lon12 >= 0 else -1
+    lonsign = math.copysign(1, lon12)
     lon12 = lonsign * lon12; lon12s = lonsign * lon12s
     lam12 = math.radians(lon12)
     # Calculate sincos of lon12 + error (this applies AngRound internally).
-    slam12, clam12 = Math.sincose(lon12, lon12s)
+    slam12, clam12 = Math.sincosde(lon12, lon12s)
     lon12s = (180 - lon12) - lon12s; # the supplementary longitude difference
 
     # If really close to the equator, treat as on equator.
@@ -725,7 +725,7 @@ class Geodesic:
       lonsign *= -1
       lat2, lat1 = lat1, lat2
     # Make lat1 <= 0
-    latsign = 1 if lat1 < 0 else -1
+    latsign = math.copysign(1, -lat1)
     lat1 *= latsign
     lat2 *= latsign
     # Now we have
@@ -760,7 +760,7 @@ class Geodesic:
 
     if cbet1 < -sbet1:
       if cbet2 == cbet1:
-        sbet2 = sbet1 if sbet2 < 0 else -sbet1
+        sbet2 = math.copysign(sbet1, sbet2)
     else:
       if abs(sbet2) == -sbet1:
         cbet2 = cbet1
@@ -789,7 +789,7 @@ class Geodesic:
       ssig2 = sbet2; csig2 = calp2 * cbet2
 
       # sig12 = sig2 - sig1
-      sig12 = math.atan2(max(0.0, csig1 * ssig2 - ssig1 * csig2),
+      sig12 = math.atan2(max(0.0, csig1 * ssig2 - ssig1 * csig2) + 0.0,
                                   csig1 * csig2 + ssig1 * ssig2)
 
       s12x, m12x, dummy, M12, M21 = self._Lengths(

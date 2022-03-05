@@ -638,7 +638,7 @@ class PlanimeterTest(unittest.TestCase):
 
   def test_Planimeter12(self):
     """Area of arctic circle (not really -- adjunct to rhumb-area test)"""
-    points = [[66.562222222, 0], [66.562222222, 180]]
+    points = [[66.562222222, 0], [66.562222222, 180], [66.562222222, 360]]
     _, perimeter, area = PlanimeterTest.Planimeter(points)
     self.assertAlmostEqual(perimeter, 10465729, delta = 1)
     self.assertAlmostEqual(area, 0, delta = 1)

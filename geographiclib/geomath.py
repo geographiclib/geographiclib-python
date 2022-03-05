@@ -122,11 +122,12 @@ class Math:
     return d, t
 
   @staticmethod
-  def sincose(x, t):
-    """Compute sine and cosine of (x + t) in degrees."""
+  def sincosd(x):
+    """Compute sine and cosine of x in degrees."""
 
-    q = int(round(x / 90)) if Math.isfinite(x) else 0
-    r = x - 90 * q; r = math.radians(Math.AngRound(r + t))
+    r = math.fmod(x, 360) if Math.isfinite(x) else Math.nan
+    q = 0 if math.isnan(r) else int(round(r / 90))
+    r -= 90 * q; r = math.radians(r)
     s = math.sin(r); c = math.cos(r)
     q = q % 4
     if   q == 1: s, c =  c, -s
@@ -137,12 +138,11 @@ class Math:
     return s, c
 
   @staticmethod
-  def sincosd(x):
-    """Compute sine and cosine of x in degrees."""
+  def sincosde(x, t):
+    """Compute sine and cosine of (x + t) in degrees with x in [-180, 180]"""
 
-    r = math.fmod(x, 360) if Math.isfinite(x) else Math.nan
-    q = 0 if math.isnan(r) else int(round(r / 90))
-    r -= 90 * q; r = math.radians(r)
+    q = int(round(x / 90)) if Math.isfinite(x) else 0
+    r = x - 90 * q; r = math.radians(Math.AngRound(r + t))
     s = math.sin(r); c = math.cos(r)
     q = q % 4
     if   q == 1: s, c =  c, -s

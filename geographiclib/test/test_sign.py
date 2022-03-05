@@ -206,3 +206,75 @@ class SignTest(unittest.TestCase):
     x = 138 + 128 * eps; y = -164; s,_ = Math.AngDiff(x, y)
     self.assertEqual(s, 58 - 128 * eps)
 
+  def test_equatorial_coincident(self):
+    """
+    azimuth with coincident point on equator
+    """
+    # lat1 lat2 azi1/2 */
+    C = [
+      [ +0.0, -0.0, 180 ],
+      [ -0.0, +0.0,   0 ]
+    ]
+    for l in C:
+      (lat1, lat2, azi) = l
+      inv = Geodesic.WGS84.Inverse(lat1, 0.0, lat1, 0.0)
+      self.assertTrue(SignTest.equiv(inv["azi1"], azi))
+      self.assertTrue(SignTest.equiv(inv["azi2"], azi))
+
+  def test_equatorial_NS(self):
+    """Does the nearly antipodal equatorial solution go north or south?"""
+    # lat1 lat2 azi1 azi2 */
+    C = [
+      [ +0.0, +0.0,  56, 124],
+      [ -0.0, -0.0, 124,  56]
+    ]
+    for l in C:
+      (lat1, lat2, azi1, azi2) = l
+      inv = Geodesic.WGS84.Inverse(lat1, 0.0, lat1, 179.5)
+      self.assertAlmostEqual(inv["azi1"], azi1, delta = 1)
+      self.assertAlmostEqual(inv["azi2"], azi2, delta = 1)
+
+  def test_antipodal(self):
+    """How does the exact antipodal equatorial path go N/S + E/W"""
+    # lat1 lat2 lon2 azi1 azi2
+    C = [
+      [ +0.0, +0.0, +180,   +0.0, +180],
+      [ -0.0, -0.0, +180, +180,   +0.0],
+      [ +0.0, +0.0, -180,   -0.0, -180],
+      [ -0.0, -0.0, -180, -180,   -0.0]
+    ]
+    for l in C:
+      (lat1, lat2, lon2, azi1, azi2) = l
+      inv = Geodesic.WGS84.Inverse(lat1, 0.0, lat1, lon2)
+      self.assertTrue(SignTest.equiv(inv["azi1"], azi1))
+      self.assertTrue(SignTest.equiv(inv["azi2"], azi2))
+
+  def test_antipodal_prolate(self):
+    """Anipodal points on the equator with prolate ellipsoid"""
+    # lon2 azi1/2
+    C = [
+      [ +180, +90 ],
+      [ -180, -90 ]
+    ]
+    geod = Geodesic(6.4e6, -1/300.0)
+    for l in C:
+      (lon2, azi) = l
+      inv = geod.Inverse(0.0, 0.0, 0.0, lon2)
+      self.assertTrue(SignTest.equiv(inv["azi1"], azi))
+      self.assertTrue(SignTest.equiv(inv["azi2"], azi))
+
+  def test_azimuth_0_180(self):
+    """azimuths = +/-0 and +/-180 for the direct problem"""
+    # azi1, lon2, azi2
+    C = [
+      [ +0.0, +180, +180 ],
+      [ -0.0, -180, -180 ],
+      [ +180, +180, +0.0 ],
+      [ -180, -180, -0.0 ]
+    ]
+    for l in C:
+      (azi1, lon2, azi2) = l
+      direct = Geodesic.WGS84.Direct(0.0, 0.0, azi1, 15e6,
+                                     Geodesic.ALL | Geodesic.LONG_UNROLL)
+      self.assertTrue(SignTest.equiv(direct["lon2"], lon2))
+      self.assertTrue(SignTest.equiv(direct["azi2"], azi2))
