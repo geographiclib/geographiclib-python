@@ -36,7 +36,7 @@ set (PYTHON_FILES
   accumulator.py constants.py geodesiccapability.py
   geodesicline.py geodesic.py geomath.py polygonarea.py)
 set (TEST_FILES
-  test/__init__.py test/test_geodesic.py)
+  test/__init__.py test/test_geodesic.py test/test_sign.py)
 
 add_subdirectory (geographiclib)
 
@@ -44,6 +44,8 @@ enable_testing ()
 # Run the test suite
 add_test (NAME testsuite
   COMMAND ${Python_EXECUTABLE} -m unittest -v geographiclib.test.test_geodesic)
+add_test (NAME testsign
+  COMMAND ${Python_EXECUTABLE} -m unittest -v geographiclib.test.test_sign)
 
 # For Python documentation
 find_program (SPHINX sphinx-build)

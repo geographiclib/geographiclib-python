@@ -709,14 +709,11 @@ class Geodesic:
     lon12, lon12s = Math.AngDiff(lon1, lon2)
     # Make longitude difference positive.
     lonsign = 1 if lon12 >= 0 else -1
-    # If very close to being on the same half-meridian, then make it so.
-    lon12 = lonsign * Math.AngRound(lon12)
-    lon12s = Math.AngRound((180 - lon12) - lonsign * lon12s)
+    lon12 = lonsign * lon12; lon12s = lonsign * lon12s
     lam12 = math.radians(lon12)
-    if lon12 > 90:
-      slam12, clam12 = Math.sincosd(lon12s); clam12 = -clam12
-    else:
-      slam12, clam12 = Math.sincosd(lon12)
+    # Calculate sincos of lon12 + error (this applies AngRound internally).
+    slam12, clam12 = Math.sincose(lon12, lon12s)
+    lon12s = (180 - lon12) - lon12s; # the supplementary longitude difference
 
     # If really close to the equator, treat as on equator.
     lat1 = Math.AngRound(Math.LatFix(lat1))

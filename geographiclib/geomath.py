@@ -58,7 +58,7 @@ class Math:
     vpp = s - up
     up -= u
     vpp -= v
-    t = -(up + vpp)
+    t = s if s == 0 else 0.0 - (up + vpp)
     # u + v =       s      + t
     #       = round(u + v) + t
     return s, t
@@ -86,7 +86,7 @@ class Math:
     y = abs(x)
     # The compiler mustn't "simplify" z - (z - y) to y
     if y < z: y = z - (z - y)
-    return 0.0 if x == 0 else (-y if x < 0 else y)
+    return math.copysign(y, x)
 
   @staticmethod
   def remainder(x, y):
@@ -103,7 +103,7 @@ class Math:
     """reduce angle to (-180,180]"""
 
     y = Math.remainder(x, 360)
-    return 180 if y == -180 else y
+    return math.copysign(180.0, x) if abs(y) == 180 else y
 
   @staticmethod
   def LatFix(x):
@@ -115,9 +115,26 @@ class Math:
   def AngDiff(x, y):
     """compute y - x and reduce to [-180,180] accurately"""
 
-    d, t = Math.sum(Math.AngNormalize(-x), Math.AngNormalize(y))
-    d = Math.AngNormalize(d)
-    return Math.sum(-180 if d == 180 and t > 0 else d, t)
+    d, t = Math.sum(Math.remainder(-x, 360), Math.remainder(y, 360))
+    d, t = Math.sum(Math.remainder(d, 360), t)
+    if d == 0 or abs(d) == 180:
+      d = math.copysign(d, y - x if t == 0 else -t)
+    return d, t
+
+  @staticmethod
+  def sincose(x, t):
+    """Compute sine and cosine of (x + t) in degrees."""
+
+    q = int(round(x / 90)) if Math.isfinite(x) else 0
+    r = x - 90 * q; r = math.radians(Math.AngRound(r + t))
+    s = math.sin(r); c = math.cos(r)
+    q = q % 4
+    if   q == 1: s, c =  c, -s
+    elif q == 2: s, c = -s, -c
+    elif q == 3: s, c = -c,  s
+    c = c + 0.0
+    if s == 0: s = math.copysign(s, x)
+    return s, c
 
   @staticmethod
   def sincosd(x):
@@ -128,17 +145,11 @@ class Math:
     r -= 90 * q; r = math.radians(r)
     s = math.sin(r); c = math.cos(r)
     q = q % 4
-    if q == 1:
-      s, c =  c, -s
-    elif q == 2:
-      s, c = -s, -c
-    elif q == 3:
-      s, c = -c,  s
-    # Remove the minus sign on -0.0 except for sin(-0.0).
-    # On Windows 32-bit with python 2.7, math.fmod(-0.0, 360) = +0.0
-    # (x, c) here fixes this bug.  See also Math::sincosd in the C++ library.
-    # AngNormalize has a similar fix.
-    s, c = (x, c) if x == 0 else (0.0+s, 0.0+c)
+    if   q == 1: s, c =  c, -s
+    elif q == 2: s, c = -s, -c
+    elif q == 3: s, c = -c,  s
+    c = c + 0.0
+    if s == 0: s = math.copysign(s, x)
     return s, c
 
   @staticmethod
@@ -152,12 +163,9 @@ class Math:
     if x < 0:
       q += 1; x = -x
     ang = math.degrees(math.atan2(y, x))
-    if q == 1:
-      ang = (180 if y >= 0 else -180) - ang
-    elif q == 2:
-      ang =  90 - ang
-    elif q == 3:
-      ang = -90 + ang
+    if   q == 1: ang = math.copysign(180, y) - ang
+    elif q == 2: ang =                90      - ang
+    elif q == 3: ang =               -90     + ang
     return ang
 
   @staticmethod
