@@ -33,4 +33,3 @@ if (LINT)
     __init__.py ${PYTHON_FILES} ${TEST_FILES}
     COMMENT "Linting with ${LINT}")
 endif ()
-

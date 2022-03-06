@@ -13,4 +13,3 @@ add_custom_command (OUTPUT
   DEPENDS ${FILES} ${SOURCES}
   COMMAND ${SPHINX} -q -b html -d doctree -c . ${CMAKE_CURRENT_SOURCE_DIR} html
   COMMENT "Generating documentation tree")
-
