@@ -61,20 +61,18 @@ class PolygonArea:
     lon12, _ = Math.AngDiff(lon1, lon2)
     lon1 = Math.AngNormalize(lon1)
     lon2 = Math.AngNormalize(lon2)
-    cross = (1 if lon1 <= 0 < lon2 and lon12 > 0
-             else (-1 if lon2 <= 0 < lon1 and lon12 < 0 else 0))
-    return cross
+    return (1 if lon12 > 0 and ( lon1 < 0 <= lon2 or
+                                (lon1 > 0 and lon2 == 0))
+            else (-1 if lon12 < 0 and lon2 < 0 <= lon1 else 0))
 
   @staticmethod
   def _transitdirect(lon1, lon2):
     """Count crossings of prime meridian for AddEdge."""
     # We want to compute exactly
-    #   int(ceil(lon2 / 360)) - int(ceil(lon1 / 360))
-    # Since we only need the parity of the result we can use std::remquo but
-    # this is buggy with g++ 4.8.3 and requires C++11.  So instead we do
+    #   int(floor(lon2 / 360)) - int(floor(lon1 / 360))
     lon1 = math.fmod(lon1, 720.0); lon2 = math.fmod(lon2, 720.0)
-    return ( (1 if (-360 < lon2 <= 0 or lon2 > 360) else 0) -
-             (1 if (-360 < lon1 <= 0 or lon1 > 360) else 0) )
+    return ( (0 if (0 <= lon2 < 360 or lon2 < -360) else 1) -
+             (0 if (0 <= lon1 < 360 or lon1 < -360) else 1 ) )
 
   @staticmethod
   def _areareduceA(area, area0, crossings, reverse, sign):

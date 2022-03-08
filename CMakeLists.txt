@@ -8,6 +8,7 @@ set (PROJECT_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}")
 if (PROJECT_VERSION_PATCH GREATER 0)
   set (PROJECT_VERSION "${PROJECT_VERSION}.${PROJECT_VERSION_PATCH}")
 endif ()
+# Follow Python conventions on the version suffix
 set (PROJECT_VERSION_SUFFIX "a0")
 set (PROJECT_VERSION "${PROJECT_VERSION}${PROJECT_VERSION_SUFFIX}")
 
@@ -64,21 +65,16 @@ foreach (f __init__.py ${PYTHON_FILES} ${TEST_FILES})
 endforeach  ()
 
 set (SDIST dist/geographiclib-${PROJECT_VERSION}.tar.gz)
-add_custom_command (OUTPUT ${SDIST}
-  COMMAND ${Python_EXECUTABLE} -m build --sdist
-  DEPENDS ${ALLDEPENDS}
-  COMMENT "Creating source package")
-
 set (WHEEL dist/geographiclib-${PROJECT_VERSION}-py2.py3-none-any.whl)
-add_custom_command (OUTPUT ${WHEEL}
-  COMMAND ${Python_EXECUTABLE} -m build --wheel
+add_custom_command (OUTPUT ${SDIST} ${WHEEL}
+  COMMAND ${Python_EXECUTABLE} -m build
   DEPENDS ${ALLDEPENDS}
-  COMMENT "Creating wheel")
+  COMMENT "Creating packages")
 
 add_custom_target (package ALL DEPENDS ${SDIST} ${WHEEL})
 
 set (INSTALL_COMMAND
-  "-m pip install -q --prefix ${CMAKE_INSTALL_PREFIX} ${SDIST}")
+  "-m pip install -q --prefix ${CMAKE_INSTALL_PREFIX} ${WHEEL}")
 install (CODE
   "message (STATUS \"python ${INSTALL_COMMAND}\")")
 install (CODE

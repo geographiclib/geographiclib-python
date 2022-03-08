@@ -210,7 +210,7 @@ class SignTest(unittest.TestCase):
     """
     azimuth with coincident point on equator
     """
-    # lat1 lat2 azi1/2 */
+    # lat1 lat2 azi1/2
     C = [
       [ +0.0, -0.0, 180 ],
       [ -0.0, +0.0,   0 ]
@@ -223,7 +223,7 @@ class SignTest(unittest.TestCase):
 
   def test_equatorial_NS(self):
     """Does the nearly antipodal equatorial solution go north or south?"""
-    # lat1 lat2 azi1 azi2 */
+    # lat1 lat2 azi1 azi2
     C = [
       [ +0.0, +0.0,  56, 124],
       [ -0.0, -0.0, 124,  56]
@@ -250,7 +250,7 @@ class SignTest(unittest.TestCase):
       self.assertTrue(SignTest.equiv(inv["azi2"], azi2))
 
   def test_antipodal_prolate(self):
-    """Anipodal points on the equator with prolate ellipsoid"""
+    """Antipodal points on the equator with prolate ellipsoid"""
     # lon2 azi1/2
     C = [
       [ +180, +90 ],

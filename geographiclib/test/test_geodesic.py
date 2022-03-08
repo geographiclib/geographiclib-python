@@ -643,6 +643,13 @@ class PlanimeterTest(unittest.TestCase):
     self.assertAlmostEqual(perimeter, 10465729, delta = 1)
     self.assertAlmostEqual(area, 0, delta = 1)
 
+  def test_Planimeter12r(self):
+    """Reverse area of arctic circle"""
+    points = [[66.562222222, -0], [66.562222222, -180], [66.562222222, -360]]
+    _, perimeter, area = PlanimeterTest.Planimeter(points)
+    self.assertAlmostEqual(perimeter, 10465729, delta = 1)
+    self.assertAlmostEqual(area, 0, delta = 1)
+
   def test_Planimeter13(self):
     """Check encircling pole twice"""
     points = [[89,-360], [89,-240], [89,-120], [89,0], [89,120], [89,240]]
