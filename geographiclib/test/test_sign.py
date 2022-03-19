@@ -65,8 +65,8 @@ class SignTest(unittest.TestCase):
 
   def test_sincosd(self):
     """Test special cases for sincosd"""
-    inf = Math.inf
-    nan = Math.nan
+    inf = math.inf
+    nan = math.nan
     s, c = Math.sincosd(-  inf)
     self.assertTrue(SignTest.equiv(s,  nan) and SignTest.equiv(c,  nan))
     s, c = Math.sincosd(-810.0)
@@ -126,8 +126,8 @@ class SignTest(unittest.TestCase):
 
   def test_atan2d(self):
     """Test special cases for atan2d"""
-    inf = Math.inf
-    nan = Math.nan
+    inf = math.inf
+    nan = math.nan
     self.assertTrue(SignTest.equiv(Math.atan2d(+0.0 , -0.0 ), +180))
     self.assertTrue(SignTest.equiv(Math.atan2d(-0.0 , -0.0 ), -180))
     self.assertTrue(SignTest.equiv(Math.atan2d(+0.0 , +0.0 ), +0.0))
@@ -217,7 +217,7 @@ class SignTest(unittest.TestCase):
     ]
     for l in C:
       (lat1, lat2, azi) = l
-      inv = Geodesic.WGS84.Inverse(lat1, 0.0, lat1, 0.0)
+      inv = Geodesic.WGS84.Inverse(lat1, 0.0, lat2, 0.0)
       self.assertTrue(SignTest.equiv(inv["azi1"], azi))
       self.assertTrue(SignTest.equiv(inv["azi2"], azi))
 
@@ -230,7 +230,7 @@ class SignTest(unittest.TestCase):
     ]
     for l in C:
       (lat1, lat2, azi1, azi2) = l
-      inv = Geodesic.WGS84.Inverse(lat1, 0.0, lat1, 179.5)
+      inv = Geodesic.WGS84.Inverse(lat1, 0.0, lat2, 179.5)
       self.assertAlmostEqual(inv["azi1"], azi1, delta = 1)
       self.assertAlmostEqual(inv["azi2"], azi2, delta = 1)
 
@@ -245,7 +245,7 @@ class SignTest(unittest.TestCase):
     ]
     for l in C:
       (lat1, lat2, lon2, azi1, azi2) = l
-      inv = Geodesic.WGS84.Inverse(lat1, 0.0, lat1, lon2)
+      inv = Geodesic.WGS84.Inverse(lat1, 0.0, lat2, lon2)
       self.assertTrue(SignTest.equiv(inv["azi1"], azi1))
       self.assertTrue(SignTest.equiv(inv["azi2"], azi2))
 
@@ -275,6 +275,6 @@ class SignTest(unittest.TestCase):
     for l in C:
       (azi1, lon2, azi2) = l
       direct = Geodesic.WGS84.Direct(0.0, 0.0, azi1, 15e6,
-                                     Geodesic.ALL | Geodesic.LONG_UNROLL)
+                                     Geodesic.STANDARD | Geodesic.LONG_UNROLL)
       self.assertTrue(SignTest.equiv(direct["lon2"], lon2))
       self.assertTrue(SignTest.equiv(direct["azi2"], azi2))

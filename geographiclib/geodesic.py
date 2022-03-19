@@ -309,9 +309,9 @@ class Geodesic:
     # abs(f)) stops etol2 getting too large in the nearly spherical case.
     self._etol2 = 0.1 * Geodesic.tol2_ / math.sqrt( max(0.001, abs(self.f)) *
                                                     min(1.0, 1-self.f/2) / 2 )
-    if not(Math.isfinite(self.a) and self.a > 0):
+    if not(math.isfinite(self.a) and self.a > 0):
       raise ValueError("Equatorial radius is not positive")
-    if not(Math.isfinite(self._b) and self._b > 0):
+    if not(math.isfinite(self._b) and self._b > 0):
       raise ValueError("Polar semi-axis is not positive")
     self._A3x = list(range(Geodesic.nA3x_))
     self._C3x = list(range(Geodesic.nC3x_))
@@ -440,7 +440,7 @@ class Geodesic:
     # outmask & REDUCEDLENGTH: set m12b & m0
     # outmask & GEODESICSCALE: set M12 & M21
 
-    s12b = m12b = m0 = M12 = M21 = Math.nan
+    s12b = m12b = m0 = M12 = M21 = math.nan
     if outmask & (Geodesic.DISTANCE | Geodesic.REDUCEDLENGTH |
                   Geodesic.GEODESICSCALE):
       A1 = Geodesic._A1m1f(eps)
@@ -489,7 +489,7 @@ class Geodesic:
     # Return a starting point for Newton's method in salp1 and calp1 (function
     # value is -1).  If Newton's method doesn't need to be used, return also
     # salp2 and calp2 and function value is sig12.
-    sig12 = -1; salp2 = calp2 = dnm = Math.nan # Return values
+    sig12 = -1; salp2 = calp2 = dnm = math.nan # Return values
     # bet12 = bet2 - bet1 in [0, pi); bet12a = bet2 + bet1 in (-pi, 0]
     sbet12 = sbet2 * cbet1 - cbet2 * sbet1
     cbet12 = cbet2 * cbet1 + sbet2 * sbet1
@@ -692,7 +692,7 @@ class Geodesic:
           Geodesic.REDUCEDLENGTH, C1a, C2a)
         dlam12 *= self._f1 / (calp2 * cbet2)
     else:
-      dlam12 = Math.nan
+      dlam12 = math.nan
 
     return (lam12, salp2, calp2, sig12, ssig1, csig1, ssig2, csig2, eps,
             domg12, dlam12)
@@ -700,7 +700,7 @@ class Geodesic:
   # return a12, s12, salp1, calp1, salp2, calp2, m12, M12, M21, S12
   def _GenInverse(self, lat1, lon1, lat2, lon2, outmask):
     """Private: General version of the inverse problem"""
-    a12 = s12 = m12 = M12 = M21 = S12 = Math.nan # return vals
+    a12 = s12 = m12 = M12 = M21 = S12 = math.nan # return vals
 
     outmask &= Geodesic.OUT_MASK
     # Compute longitude difference (AngDiff does this carefully).  Result is
@@ -713,7 +713,7 @@ class Geodesic:
     lam12 = math.radians(lon12)
     # Calculate sincos of lon12 + error (this applies AngRound internally).
     slam12, clam12 = Math.sincosde(lon12, lon12s)
-    lon12s = (180 - lon12) - lon12s; # the supplementary longitude difference
+    lon12s = (180 - lon12) - lon12s # the supplementary longitude difference
 
     # If really close to the equator, treat as on equator.
     lat1 = Math.AngRound(Math.LatFix(lat1))

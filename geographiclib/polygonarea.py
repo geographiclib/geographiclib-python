@@ -70,9 +70,9 @@ class PolygonArea:
     """Count crossings of prime meridian for AddEdge."""
     # We want to compute exactly
     #   int(floor(lon2 / 360)) - int(floor(lon1 / 360))
-    lon1 = math.fmod(lon1, 720.0); lon2 = math.fmod(lon2, 720.0)
-    return ( (0 if (0 <= lon2 < 360 or lon2 < -360) else 1) -
-             (0 if (0 <= lon1 < 360 or lon1 < -360) else 1 ) )
+    lon1 = Math.remainder(lon1, 720.0); lon2 = Math.remainder(lon2, 720.0)
+    return ( (0 if 0 <= lon2 < 360 else 1) -
+             (0 if 0 <= lon1 < 360 else 1) )
 
   @staticmethod
   def _areareduceA(area, area0, crossings, reverse, sign):
@@ -143,12 +143,12 @@ class PolygonArea:
     self._perimetersum = Accumulator()
     self.num = 0
     """The current number of points in the polygon (readonly)"""
-    self.lat1 = Math.nan
+    self.lat1 = math.nan
     """The current latitude in degrees (readonly)"""
-    self.lon1 = Math.nan
+    self.lon1 = math.nan
     """The current longitude in degrees (readonly)"""
     self._crossings = 0
-    self._lat0 = self._lon0 = Math.nan
+    self._lat0 = self._lon0 = math.nan
 
   def Clear(self):
     """Reset to empty polygon."""
@@ -156,7 +156,7 @@ class PolygonArea:
     self._crossings = 0
     if not self.polyline: self._areasum.Set(0)
     self._perimetersum.Set(0)
-    self._lat0 = self._lon0 = self.lat1 = self.lon1 = Math.nan
+    self._lat0 = self._lon0 = self.lat1 = self.lon1 = math.nan
 
   def AddPoint(self, lat, lon):
     """Add the next vertex to the polygon
@@ -226,7 +226,7 @@ class PolygonArea:
     More points can be added to the polygon after this call.
 
     """
-    if self.polyline: area = Math.nan
+    if self.polyline: area = math.nan
     if self.num < 2:
       perimeter = 0.0
       if not self.polyline: area = 0.0
@@ -260,7 +260,7 @@ class PolygonArea:
     :return: a tuple of number, perimeter (meters), area (meters^2)
 
     """
-    if self.polyline: area = Math.nan
+    if self.polyline: area = math.nan
     if self.num == 0:
       perimeter = 0.0
       if not self.polyline: area = 0.0
@@ -303,11 +303,11 @@ class PolygonArea:
     """
 
     if self.num == 0:           # we don't have a starting point!
-      return 0, Math.nan, Math.nan
+      return 0, math.nan, math.nan
     num = self.num + 1
     perimeter = self._perimetersum.Sum() + s
     if self.polyline:
-      return num, perimeter, Math.nan
+      return num, perimeter, math.nan
 
     tempsum =  self._areasum.Sum()
     crossings = self._crossings

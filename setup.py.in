@@ -51,4 +51,5 @@ setuptools.setup(
     "Topic :: Software Development :: Libraries :: Python Modules",
   ],
   test_suite = "geographiclib.test.test_geodesic",
+  python_requires = ">=@Python_VERSION_NUMBER@",
 )

@@ -19,9 +19,6 @@ class Math:
   Additional math routines for GeographicLib.
   """
 
-  inf = float("inf") if sys.version_info < (3, 0) else math.inf
-  nan = float("nan") if sys.version_info < (3, 0) else math.nan
-
   @staticmethod
   def sq(x):
     """Square a number"""
@@ -92,11 +89,7 @@ class Math:
   def remainder(x, y):
     """remainder of x/y in the range [-y/2, y/2]."""
 
-    if sys.version_info >= (3, 7):
-      return math.remainder(x, y) if Math.isfinite(x) else Math.nan
-
-    z = math.fmod(x, y) if Math.isfinite(x) else Math.nan
-    return z + y if z < -y/2 else (z if z < y/2 else z -y)
+    return math.remainder(x, y) if math.isfinite(x) else math.nan
 
   @staticmethod
   def AngNormalize(x):
@@ -109,7 +102,7 @@ class Math:
   def LatFix(x):
     """replace angles outside [-90,90] by NaN"""
 
-    return Math.nan if abs(x) > 90 else x
+    return math.nan if abs(x) > 90 else x
 
   @staticmethod
   def AngDiff(x, y):
@@ -125,7 +118,7 @@ class Math:
   def sincosd(x):
     """Compute sine and cosine of x in degrees."""
 
-    r = math.fmod(x, 360) if Math.isfinite(x) else Math.nan
+    r = math.fmod(x, 360) if math.isfinite(x) else math.nan
     q = 0 if math.isnan(r) else int(round(r / 90))
     r -= 90 * q; r = math.radians(r)
     s = math.sin(r); c = math.cos(r)
@@ -141,7 +134,7 @@ class Math:
   def sincosde(x, t):
     """Compute sine and cosine of (x + t) in degrees with x in [-180, 180]"""
 
-    q = int(round(x / 90)) if Math.isfinite(x) else 0
+    q = int(round(x / 90)) if math.isfinite(x) else 0
     r = x - 90 * q; r = math.radians(Math.AngRound(r + t))
     s = math.sin(r); c = math.cos(r)
     q = q % 4
@@ -167,10 +160,3 @@ class Math:
     elif q == 2: ang =                90      - ang
     elif q == 3: ang =               -90     + ang
     return ang
-
-  @staticmethod
-  def isfinite(x):
-    """Test for finiteness"""
-
-    return (abs(x) <= sys.float_info.max if sys.version_info < (3, 0)
-            else math.isfinite(x))

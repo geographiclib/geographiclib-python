@@ -66,7 +66,7 @@ class GeodesicLine:
   def __init__(self, geod, lat1, lon1, azi1,
                caps = GeodesicCapability.STANDARD |
                GeodesicCapability.DISTANCE_IN,
-               salp1 = Math.nan, calp1 = Math.nan):
+               salp1 = math.nan, calp1 = math.nan):
     """Construct a GeodesicLine object
 
     :param geod: a :class:`~geographiclib.geodesic.Geodesic` object
@@ -180,16 +180,16 @@ class GeodesicLine:
       self._A4 = Math.sq(self.a) * self._calp0 * self._salp0 * geod._e2
       self._B41 = Geodesic._SinCosSeries(
         False, self._ssig1, self._csig1, self._C4a)
-    self.s13 = Math.nan
+    self.s13 = math.nan
     """the distance between point 1 and point 3 in meters (readonly)"""
-    self.a13 = Math.nan
+    self.a13 = math.nan
     """the arc length between point 1 and point 3 in degrees (readonly)"""
 
   # return a12, lat2, lon2, azi2, s12, m12, M12, M21, S12
   def _GenPosition(self, arcmode, s12_a12, outmask):
     """Private: General solution of position along geodesic"""
     from geographiclib.geodesic import Geodesic
-    a12 = lat2 = lon2 = azi2 = s12 = m12 = M12 = M21 = S12 = Math.nan
+    a12 = lat2 = lon2 = azi2 = s12 = m12 = M12 = M21 = S12 = math.nan
     outmask &= self.caps & Geodesic.OUT_MASK
     if not (arcmode or
             (self.caps & (Geodesic.OUT_MASK & Geodesic.DISTANCE_IN))):
@@ -205,7 +205,7 @@ class GeodesicLine:
     else:
       # Interpret s12_a12 as distance
       tau12 = s12_a12 / (self._b * (1 + self._A1m1))
-      tau12 = tau12 if Math.isfinite(tau12) else Math.nan
+      tau12 = tau12 if math.isfinite(tau12) else math.nan
       s = math.sin(tau12); c = math.cos(tau12)
       # tau2 = tau1 + tau12
       B12 = - Geodesic._SinCosSeries(True,

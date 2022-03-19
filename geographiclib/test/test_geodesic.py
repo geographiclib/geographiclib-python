@@ -3,7 +3,6 @@
 import unittest
 import math
 
-from geographiclib.geomath import Math
 from geographiclib.geodesic import Geodesic
 
 class GeodesicTest(unittest.TestCase):
@@ -231,7 +230,7 @@ class GeodSolveTest(unittest.TestCase):
 
   def test_GeodSolve14(self):
     """Check fix for inverse ignoring lon12 = nan"""
-    inv = Geodesic.WGS84.Inverse(0, 0, 1, Math.nan)
+    inv = Geodesic.WGS84.Inverse(0, 0, 1, math.nan)
     self.assertTrue(math.isnan(inv["azi1"]))
     self.assertTrue(math.isnan(inv["azi2"]))
     self.assertTrue(math.isnan(inv["s12"]))
@@ -343,11 +342,11 @@ class GeodSolveTest(unittest.TestCase):
   def test_GeodSolve55(self):
     """Check fix for nan + point on equator or pole not returning all nans in
     Geodesic::Inverse, found 2015-09-23."""
-    inv = Geodesic.WGS84.Inverse(Math.nan, 0, 0, 90)
+    inv = Geodesic.WGS84.Inverse(math.nan, 0, 0, 90)
     self.assertTrue(math.isnan(inv["azi1"]))
     self.assertTrue(math.isnan(inv["azi2"]))
     self.assertTrue(math.isnan(inv["s12"]))
-    inv = Geodesic.WGS84.Inverse(Math.nan, 0, 90, 9)
+    inv = Geodesic.WGS84.Inverse(math.nan, 0, 90, 9)
     self.assertTrue(math.isnan(inv["azi1"]))
     self.assertTrue(math.isnan(inv["azi2"]))
     self.assertTrue(math.isnan(inv["s12"]))
@@ -513,35 +512,35 @@ class GeodSolveTest(unittest.TestCase):
   def test_GeodSolve84(self):
     """Tests for python implementation to check fix for range errors with
     {fmod,sin,cos}(inf) (includes GeodSolve84 - GeodSolve91)."""
-    direct = Geodesic.WGS84.Direct(0, 0, 90, Math.inf)
+    direct = Geodesic.WGS84.Direct(0, 0, 90, math.inf)
     self.assertTrue(math.isnan(direct["lat2"]))
     self.assertTrue(math.isnan(direct["lon2"]))
     self.assertTrue(math.isnan(direct["azi2"]))
-    direct = Geodesic.WGS84.Direct(0, 0, 90, Math.nan)
+    direct = Geodesic.WGS84.Direct(0, 0, 90, math.nan)
     self.assertTrue(math.isnan(direct["lat2"]))
     self.assertTrue(math.isnan(direct["lon2"]))
     self.assertTrue(math.isnan(direct["azi2"]))
-    direct = Geodesic.WGS84.Direct(0, 0, Math.inf, 1000)
+    direct = Geodesic.WGS84.Direct(0, 0, math.inf, 1000)
     self.assertTrue(math.isnan(direct["lat2"]))
     self.assertTrue(math.isnan(direct["lon2"]))
     self.assertTrue(math.isnan(direct["azi2"]))
-    direct = Geodesic.WGS84.Direct(0, 0, Math.nan, 1000)
+    direct = Geodesic.WGS84.Direct(0, 0, math.nan, 1000)
     self.assertTrue(math.isnan(direct["lat2"]))
     self.assertTrue(math.isnan(direct["lon2"]))
     self.assertTrue(math.isnan(direct["azi2"]))
-    direct = Geodesic.WGS84.Direct(0, Math.inf, 90, 1000)
+    direct = Geodesic.WGS84.Direct(0, math.inf, 90, 1000)
     self.assertTrue(direct["lat1"] == 0)
     self.assertTrue(math.isnan(direct["lon2"]))
     self.assertTrue(direct["azi2"] == 90)
-    direct = Geodesic.WGS84.Direct(0, Math.nan, 90, 1000)
+    direct = Geodesic.WGS84.Direct(0, math.nan, 90, 1000)
     self.assertTrue(direct["lat1"] == 0)
     self.assertTrue(math.isnan(direct["lon2"]))
     self.assertTrue(direct["azi2"] == 90)
-    direct = Geodesic.WGS84.Direct(Math.inf, 0, 90, 1000)
+    direct = Geodesic.WGS84.Direct(math.inf, 0, 90, 1000)
     self.assertTrue(math.isnan(direct["lat2"]))
     self.assertTrue(math.isnan(direct["lon2"]))
     self.assertTrue(math.isnan(direct["azi2"]))
-    direct = Geodesic.WGS84.Direct(Math.nan, 0, 90, 1000)
+    direct = Geodesic.WGS84.Direct(math.nan, 0, 90, 1000)
     self.assertTrue(math.isnan(direct["lat2"]))
     self.assertTrue(math.isnan(direct["lon2"]))
     self.assertTrue(math.isnan(direct["azi2"]))
@@ -559,7 +558,7 @@ class GeodSolveTest(unittest.TestCase):
   def test_GeodSolve94(self):
     """Check fix for lat2 = nan being treated as lat2 = 0 (bug found
        2021-07-26)"""
-    inv = Geodesic.WGS84.Inverse(0, 0, Math.nan, 90)
+    inv = Geodesic.WGS84.Inverse(0, 0, math.nan, 90)
     self.assertTrue(math.isnan(inv["azi1"]))
     self.assertTrue(math.isnan(inv["azi2"]))
     self.assertTrue(math.isnan(inv["s12"]))
@@ -730,7 +729,7 @@ class PlanimeterTest(unittest.TestCase):
     self.assertAlmostEqual(perimeter, 156876.149, delta = 0.5e-3)
 
   def test_Planimeter21(self):
-    """Some test to add code coverage: multiple circlings of pole (includes
+    """Some tests to add code coverage: multiple circlings of pole (includes
     Planimeter21 - Planimeter28) + invocations via testpoint and testedge."""
     lat = 45
     azi = 39.2144607176828184218

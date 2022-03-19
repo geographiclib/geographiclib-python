@@ -8,7 +8,8 @@ set (PROJECT_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}")
 if (PROJECT_VERSION_PATCH GREATER 0)
   set (PROJECT_VERSION "${PROJECT_VERSION}.${PROJECT_VERSION_PATCH}")
 endif ()
-# Follow Python conventions on the version suffix
+# Follow Python conventions on the version suffix: {a,b,rc}N, see
+# https://www.python.org/dev/peps/pep-0440
 set (PROJECT_VERSION_SUFFIX "a0")
 set (PROJECT_VERSION "${PROJECT_VERSION}${PROJECT_VERSION_SUFFIX}")
 
@@ -23,11 +24,14 @@ if (NOT CMAKE_CONFIGURATION_TYPES AND NOT CMAKE_BUILD_TYPE)
 endif ()
 
 configure_file (setup.py.in setup.py @ONLY)
-set (EXTRA_FILES setup.cfg README.md LICENSE MANIFEST.in)
+set (EXTRA_FILES README.md LICENSE MANIFEST.in)
 foreach (f ${EXTRA_FILES})
   configure_file (${f} ${f} COPYONLY)
 endforeach ()
 
+# Minimum version of Python supported in 3.7 (for math.remainder).  Next
+# update will be to 3.10 (to catch the fix in math.hypot).
+set (Python_VERSION_NUMBER 3.7 CACHE STRING "The minimum version of Python")
 find_package (Python ${Python_VERSION_NUMBER} COMPONENTS Interpreter)
 message (STATUS
   "Python found: ${Python_EXECUTABLE}, Version: ${Python_VERSION}")
