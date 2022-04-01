@@ -11,7 +11,7 @@ endif ()
 # Follow Python conventions on the version suffix: {a,b,rc}N, see
 # https://www.python.org/dev/peps/pep-0440
 set (PROJECT_VERSION_SUFFIX "a0")
-set (PROJECT_VERSION "${PROJECT_VERSION}${PROJECT_VERSION_SUFFIX}")
+set (PROJECT_FULLVERSION "${PROJECT_VERSION}${PROJECT_VERSION_SUFFIX}")
 
 set (RELEASE_DATE "2022-mm-dd")
 
@@ -68,8 +68,8 @@ foreach (f __init__.py ${PYTHON_FILES} ${TEST_FILES})
     ${ALLDEPENDS} "${CMAKE_CURRENT_BINARY_DIR}/geographiclib/${f}")
 endforeach  ()
 
-set (SDIST dist/geographiclib-${PROJECT_VERSION}.tar.gz)
-set (WHEEL dist/geographiclib-${PROJECT_VERSION}-py2.py3-none-any.whl)
+set (SDIST dist/geographiclib-${PROJECT_FULLVERSION}.tar.gz)
+set (WHEEL dist/geographiclib-${PROJECT_FULLVERSION}-py3-none-any.whl)
 add_custom_command (OUTPUT ${SDIST} ${WHEEL}
   COMMAND ${Python_EXECUTABLE} -m build
   DEPENDS ${ALLDEPENDS}
@@ -82,24 +82,52 @@ set (INSTALL_COMMAND
 install (CODE
   "message (STATUS \"python ${INSTALL_COMMAND}\")")
 install (CODE
-  "execute_process(COMMAND ${Python_EXECUTABLE} ${INSTALL_COMMAND})")
+  "execute_process (COMMAND ${Python_EXECUTABLE} ${INSTALL_COMMAND})")
 
-if (EXISTS ${PROJECT_SOURCE_DIR}/.git AND NOT WIN32)
+if (IS_DIRECTORY ${PROJECT_SOURCE_DIR}/.git AND NOT WIN32)
   add_custom_target (checktrailingspace
-    COMMAND git ls-tree -r HEAD --name-only | xargs grep ' $$' || true
+    COMMAND git ls-files | xargs grep ' $$' || true
     WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
     COMMENT "Looking for trailing spaces")
   add_custom_target (checktabs
-    COMMAND git ls-tree -r HEAD --name-only | xargs grep '\t' || true
+    COMMAND git ls-files | xargs grep '\t' || true
     WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
     COMMENT "Looking for tabs")
   add_custom_target (checkblanklines
-    COMMAND git ls-tree -r HEAD --name-only |
+    COMMAND git ls-files |
     while read f\; do tr 'X\\n' 'YX' < $$f |
     egrep '\(^X|XXX|XX$$|[^X]$$\)' > /dev/null && echo $$f\; done || true
     WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
     COMMENT "Looking for extra blank lines")
 
-  add_custom_target(sanitize)
-  add_dependencies(sanitize checktrailingspace checktabs checkblanklines)
+  add_custom_target (sanitize)
+  add_dependencies (sanitize checktrailingspace checktabs checkblanklines)
+
+  find_program (RSYNC rsync)
+  if (RSYNC)
+    set (USER karney)
+    set (DATAROOT $ENV{HOME}/web/geographiclib-files/distrib-Python)
+    set (DOCROOT $ENV{HOME}/web/geographiclib-web/htdocs/Python)
+    set (FRSDEPLOY ${USER}@frs.sourceforge.net:/home/frs/project/geographiclib)
+    set (WEBDEPLOY ${USER},geographiclib@web.sourceforge.net:./htdocs)
+
+    add_custom_target (stage-dist
+      COMMAND ${CMAKE_COMMAND} -E copy_if_different
+       ${SDIST} ${WHEEL} ${PROJECT_SOURCE_DIR}/distrib-Python/
+      COMMAND ${RSYNC} --delete -a --exclude '*~'
+      ${PROJECT_SOURCE_DIR}/distrib-Python/ ${DATAROOT}/)
+    add_dependencies (stage-dist package)
+
+    if (SPHINX)
+      add_custom_target (stage-doc
+        COMMAND ${RSYNC} --delete -a
+        doc/html/ ${DOCROOT}/${PROJECT_VERSION}/)
+      add_dependencies (stage-doc doc)
+    endif ()
+
+    add_custom_target (deploy-dist
+      COMMAND ${RSYNC} --delete -av ${DATAROOT} ${FRSDEPLOY}/)
+    add_custom_target (deploy-doc
+      COMMAND ${RSYNC} --delete -av -e ssh ${DOCROOT} ${WEBDEPLOY}/)
+  endif ()
 endif ()

@@ -70,9 +70,9 @@ The public attributes for this class are
 #    Charles F. F. Karney,
 #    Algorithms for geodesics, J. Geodesy 87, 43-55 (2013),
 #    https://doi.org/10.1007/s00190-012-0578-z
-#    Addenda: https://geographiclib.sourceforge.io/geod-addenda.html
+#    Addenda: https://geographiclib.sourceforge.io/misc/geod-addenda.html
 #
-# Copyright (c) Charles Karney (2011-2021) <charles@karney.com> and licensed
+# Copyright (c) Charles Karney (2011-2022) <charles@karney.com> and licensed
 # under the MIT/X11 License.  For more information, see
 # https://geographiclib.sourceforge.io/
 ######################################################################
@@ -816,7 +816,7 @@ class Geodesic:
         meridian = False
     # end if meridian:
 
-    # somg12 > 1 marks that it needs to be calculated
+    # somg12 == 2 marks that it needs to be calculated
     somg12 = 2.0; comg12 = 0.0; omg12 = 0.0
     if (not meridian and
         sbet1 == 0 and   # and sbet2 == 0
@@ -967,7 +967,7 @@ class Geodesic:
         # Avoid problems with indeterminate sig1, sig2 on equator
         S12 = 0.0
 
-      if not meridian and somg12 > 1:
+      if not meridian and somg12 == 2.0:
         somg12 = math.sin(omg12); comg12 = math.cos(omg12)
 
       if (not meridian and

@@ -7,7 +7,8 @@ endforeach ()
 
 configure_file (conf.py . COPYONLY)
 
-add_custom_target (doc DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/html/index.html)
+add_custom_target (doc ALL
+  DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/html/index.html)
 add_custom_command (OUTPUT
   ${CMAKE_CURRENT_BINARY_DIR}/html/index.html
   DEPENDS ${FILES} ${SOURCES}

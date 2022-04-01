@@ -1,10 +1,16 @@
 cmake cache values
 Python_VERSION_NUMBER 3.7
 
-python3 -m pip install build
-python3 -m pip install twine
+cmake targets:
 
-twine upload dist/*
+  all = package + doc
+  install =  python -m pip install -q --prefix ${CMAKE_INSTALL_PREFIX} ${WHEEL}
+    installs to lib/python3.10/site-packages/geographiclib
+
+  stage-doc
+  stage-dist
+  deploy-doc
+  deploy-dist
 
 https://pypi.org/project/geographiclib
 Version update checks

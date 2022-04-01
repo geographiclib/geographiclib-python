@@ -563,6 +563,15 @@ class GeodSolveTest(unittest.TestCase):
     self.assertTrue(math.isnan(inv["azi2"]))
     self.assertTrue(math.isnan(inv["s12"]))
 
+  def test_GeodSolve96(self):
+    """Failure with long doubles found with test case from Nowak + Nowak Da
+       Costa (2022).  Problem was using somg12 > 1 as a test that it needed
+       to be set when roundoff could result in somg12 slightly bigger that 1.
+       Found + fixed 2022-03-30."""
+    geod = Geodesic(6378137, 1/298.257222101)
+    inv = geod.Inverse(0, 0, 60.0832522871723, 89.8492185074635, Geodesic.AREA)
+    self.assertAlmostEqual(inv["S12"], 42426932221845, delta = 0.5)
+
 class PlanimeterTest(unittest.TestCase):
   """Planimeter tests"""
 

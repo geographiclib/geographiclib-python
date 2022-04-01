@@ -14,7 +14,7 @@ Jump to
 Introduction
 ------------
 
-Consider a ellipsoid of revolution with equatorial radius *a*, polar
+Consider an ellipsoid of revolution with equatorial radius *a*, polar
 semi-axis *b*, and flattening *f* = (*a* − *b*)/*a* .  Points on
 the surface of the ellipsoid are characterized by their latitude φ
 and longitude λ.  (Note that latitude here means the
@@ -190,13 +190,13 @@ References
   `Algorithms for geodesics
   <https://doi.org/10.1007/s00190-012-0578-z>`_,
   J. Geodesy **87**\ (1) 43–55 (2013);
-  `addenda <https://geographiclib.sourceforge.io/geod-addenda.html>`_.
+  `addenda <https://geographiclib.sourceforge.io/misc/geod-addenda.html>`_.
 * C. F. F. Karney,
   `Geodesics on an ellipsoid of revolution
   <https://arxiv.org/abs/1102.1215v1>`_,
   Feb. 2011;
   `errata
-  <https://geographiclib.sourceforge.io/geod-addenda.html#geod-errata>`_.
+  <https://geographiclib.sourceforge.io/misc/geod-addenda.html#geod-errata>`_.
 * `A geodesic bibliography
   <https://geographiclib.sourceforge.io/geodesic-papers/biblio.html>`_.
 * The wikipedia page,
