@@ -72,17 +72,18 @@ The public attributes for this class are
 #    https://doi.org/10.1007/s00190-012-0578-z
 #    Addenda: https://geographiclib.sourceforge.io/geod-addenda.html
 #
-# Copyright (c) Charles Karney (2011-2021) <charles@karney.com> and licensed
+# Copyright (c) Charles Karney (2011-2022) <charles@karney.com> and licensed
 # under the MIT/X11 License.  For more information, see
 # https://geographiclib.sourceforge.io/
 ######################################################################
 
 import math
+import sys
 from geographiclib.geomath import Math
 from geographiclib.constants import Constants
 from geographiclib.geodesiccapability import GeodesicCapability
 
-class Geodesic(object):
+class Geodesic:
   """Solve geodesic problems"""
 
   GEOGRAPHICLIB_GEODESIC_ORDER = 6
@@ -98,10 +99,10 @@ class Geodesic(object):
   nC4_ = GEOGRAPHICLIB_GEODESIC_ORDER
   nC4x_ = (nC4_ * (nC4_ + 1)) // 2
   maxit1_ = 20
-  maxit2_ = maxit1_ + Math.digits + 10
+  maxit2_ = maxit1_ + sys.float_info.mant_dig + 10
 
-  tiny_ = math.sqrt(Math.minval)
-  tol0_ = Math.epsilon
+  tiny_ = math.sqrt(sys.float_info.min)
+  tol0_ = sys.float_info.epsilon
   tol1_ = 200 * tol0_
   tol2_ = math.sqrt(tol0_)
   tolb_ = tol0_ * tol2_
@@ -118,6 +119,7 @@ class Geodesic(object):
   OUT_ALL  = GeodesicCapability.OUT_ALL
   OUT_MASK = GeodesicCapability.OUT_MASK
 
+  @staticmethod
   def _SinCosSeries(sinp, sinx, cosx, c):
     """Private: Evaluate a trig series using Clenshaw summation."""
     # Evaluate
@@ -142,8 +144,8 @@ class Geodesic(object):
       k -= 1; y0 = ar * y1 - y0 + c[k]
     return ( 2 * sinx * cosx * y0 if sinp # sin(2 * x) * y0
              else cosx * (y0 - y1) )      # cos(x) * (y0 - y1)
-  _SinCosSeries = staticmethod(_SinCosSeries)
 
+  @staticmethod
   def _Astroid(x, y):
     """Private: solve astroid equation."""
     # Solve k^4+2*k^3-(x^2+y^2-1)*k^2-2*y^2*k-y^2 = 0 for positive root k.
@@ -189,8 +191,8 @@ class Geodesic(object):
       # for y small, positive root is k = abs(y)/sqrt(1-x^2)
       k = 0
     return k
-  _Astroid = staticmethod(_Astroid)
 
+  @staticmethod
   def _A1m1f(eps):
     """Private: return A1-1."""
     coeff = [
@@ -199,8 +201,8 @@ class Geodesic(object):
     m = Geodesic.nA1_//2
     t = Math.polyval(m, coeff, 0, Math.sq(eps)) / coeff[m + 1]
     return (t + eps) / (1 - eps)
-  _A1m1f = staticmethod(_A1m1f)
 
+  @staticmethod
   def _C1f(eps, c):
     """Private: return C1."""
     coeff = [
@@ -219,8 +221,8 @@ class Geodesic(object):
       c[l] = d * Math.polyval(m, coeff, o, eps2) / coeff[o + m + 1]
       o += m + 2
       d *= eps
-  _C1f = staticmethod(_C1f)
 
+  @staticmethod
   def _C1pf(eps, c):
     """Private: return C1'"""
     coeff = [
@@ -239,8 +241,8 @@ class Geodesic(object):
       c[l] = d * Math.polyval(m, coeff, o, eps2) / coeff[o + m + 1]
       o += m + 2
       d *= eps
-  _C1pf = staticmethod(_C1pf)
 
+  @staticmethod
   def _A2m1f(eps):
     """Private: return A2-1"""
     coeff = [
@@ -249,8 +251,8 @@ class Geodesic(object):
     m = Geodesic.nA2_//2
     t = Math.polyval(m, coeff, 0, Math.sq(eps)) / coeff[m + 1]
     return (t - eps) / (1 + eps)
-  _A2m1f = staticmethod(_A2m1f)
 
+  @staticmethod
   def _C2f(eps, c):
     """Private: return C2"""
     coeff = [
@@ -269,7 +271,6 @@ class Geodesic(object):
       c[l] = d * Math.polyval(m, coeff, o, eps2) / coeff[o + m + 1]
       o += m + 2
       d *= eps
-  _C2f = staticmethod(_C2f)
 
   def __init__(self, a, f):
     """Construct a Geodesic object
@@ -294,7 +295,7 @@ class Geodesic(object):
     # authalic radius squared
     self._c2 = (Math.sq(self.a) + Math.sq(self._b) *
                 (1 if self._e2 == 0 else
-                 (Math.atanh(math.sqrt(self._e2)) if self._e2 > 0 else
+                 (math.atanh(math.sqrt(self._e2)) if self._e2 > 0 else
                   math.atan(math.sqrt(-self._e2))) /
                  math.sqrt(abs(self._e2))))/2
     # The sig12 threshold for "really short".  Using the auxiliary sphere
@@ -308,9 +309,9 @@ class Geodesic(object):
     # abs(f)) stops etol2 getting too large in the nearly spherical case.
     self._etol2 = 0.1 * Geodesic.tol2_ / math.sqrt( max(0.001, abs(self.f)) *
                                                     min(1.0, 1-self.f/2) / 2 )
-    if not(Math.isfinite(self.a) and self.a > 0):
+    if not(math.isfinite(self.a) and self.a > 0):
       raise ValueError("Equatorial radius is not positive")
-    if not(Math.isfinite(self._b) and self._b > 0):
+    if not(math.isfinite(self._b) and self._b > 0):
       raise ValueError("Polar semi-axis is not positive")
     self._A3x = list(range(Geodesic.nA3x_))
     self._C3x = list(range(Geodesic.nC3x_))
@@ -439,7 +440,7 @@ class Geodesic(object):
     # outmask & REDUCEDLENGTH: set m12b & m0
     # outmask & GEODESICSCALE: set M12 & M21
 
-    s12b = m12b = m0 = M12 = M21 = Math.nan
+    s12b = m12b = m0 = M12 = M21 = math.nan
     if outmask & (Geodesic.DISTANCE | Geodesic.REDUCEDLENGTH |
                   Geodesic.GEODESICSCALE):
       A1 = Geodesic._A1m1f(eps)
@@ -488,7 +489,7 @@ class Geodesic(object):
     # Return a starting point for Newton's method in salp1 and calp1 (function
     # value is -1).  If Newton's method doesn't need to be used, return also
     # salp2 and calp2 and function value is sig12.
-    sig12 = -1; salp2 = calp2 = dnm = Math.nan # Return values
+    sig12 = -1; salp2 = calp2 = dnm = math.nan # Return values
     # bet12 = bet2 - bet1 in [0, pi); bet12a = bet2 + bet1 in (-pi, 0]
     sbet12 = sbet2 * cbet1 - cbet2 * sbet1
     cbet12 = cbet2 * cbet1 + sbet2 * sbet1
@@ -537,10 +538,6 @@ class Geodesic(object):
       # Scale lam12 and bet2 to x, y coordinate system where antipodal point
       # is at origin and singular point is at y = 0, x = -1.
       # real y, lamscale, betscale
-      # Volatile declaration needed to fix inverse case
-      # 56.320923501171 0 -56.320923501171 179.664747671772880215
-      # which otherwise fails with g++ 4.4.4 x86 -O3
-      # volatile real x
       lam12x = math.atan2(-slam12, -clam12)
       if self.f >= 0:            # In fact f == 0 does not get here
         # x = dlong, y = dlat
@@ -667,11 +664,11 @@ class Geodesic(object):
     # Math.norm(somg2, comg2); -- don't need to normalize!
 
     # sig12 = sig2 - sig1, limit to [0, pi]
-    sig12 = math.atan2(max(0.0, csig1 * ssig2 - ssig1 * csig2),
+    sig12 = math.atan2(max(0.0, csig1 * ssig2 - ssig1 * csig2) + 0.0,
                                 csig1 * csig2 + ssig1 * ssig2)
 
     # omg12 = omg2 - omg1, limit to [0, pi]
-    somg12 = max(0.0, comg1 * somg2 - somg1 * comg2)
+    somg12 = max(0.0, comg1 * somg2 - somg1 * comg2) + 0.0
     comg12 =          comg1 * comg2 + somg1 * somg2
     # eta = omg12 - lam120
     eta = math.atan2(somg12 * clam120 - comg12 * slam120,
@@ -695,7 +692,7 @@ class Geodesic(object):
           Geodesic.REDUCEDLENGTH, C1a, C2a)
         dlam12 *= self._f1 / (calp2 * cbet2)
     else:
-      dlam12 = Math.nan
+      dlam12 = math.nan
 
     return (lam12, salp2, calp2, sig12, ssig1, csig1, ssig2, csig2, eps,
             domg12, dlam12)
@@ -703,7 +700,7 @@ class Geodesic(object):
   # return a12, s12, salp1, calp1, salp2, calp2, m12, M12, M21, S12
   def _GenInverse(self, lat1, lon1, lat2, lon2, outmask):
     """Private: General version of the inverse problem"""
-    a12 = s12 = m12 = M12 = M21 = S12 = Math.nan # return vals
+    a12 = s12 = m12 = M12 = M21 = S12 = math.nan # return vals
 
     outmask &= Geodesic.OUT_MASK
     # Compute longitude difference (AngDiff does this carefully).  Result is
@@ -711,27 +708,24 @@ class Geodesic(object):
     # east-going and meridional geodesics.
     lon12, lon12s = Math.AngDiff(lon1, lon2)
     # Make longitude difference positive.
-    lonsign = 1 if lon12 >= 0 else -1
-    # If very close to being on the same half-meridian, then make it so.
-    lon12 = lonsign * Math.AngRound(lon12)
-    lon12s = Math.AngRound((180 - lon12) - lonsign * lon12s)
+    lonsign = math.copysign(1, lon12)
+    lon12 = lonsign * lon12; lon12s = lonsign * lon12s
     lam12 = math.radians(lon12)
-    if lon12 > 90:
-      slam12, clam12 = Math.sincosd(lon12s); clam12 = -clam12
-    else:
-      slam12, clam12 = Math.sincosd(lon12)
+    # Calculate sincos of lon12 + error (this applies AngRound internally).
+    slam12, clam12 = Math.sincosde(lon12, lon12s)
+    lon12s = (180 - lon12) - lon12s # the supplementary longitude difference
 
     # If really close to the equator, treat as on equator.
     lat1 = Math.AngRound(Math.LatFix(lat1))
     lat2 = Math.AngRound(Math.LatFix(lat2))
     # Swap points so that point with higher (abs) latitude is point 1
     # If one latitude is a nan, then it becomes lat1.
-    swapp = -1 if abs(lat1) < abs(lat2) else 1
+    swapp = -1 if abs(lat1) < abs(lat2) or math.isnan(lat2) else 1
     if swapp < 0:
       lonsign *= -1
       lat2, lat1 = lat1, lat2
     # Make lat1 <= 0
-    latsign = 1 if lat1 < 0 else -1
+    latsign = math.copysign(1, -lat1)
     lat1 *= latsign
     lat2 *= latsign
     # Now we have
@@ -766,7 +760,7 @@ class Geodesic(object):
 
     if cbet1 < -sbet1:
       if cbet2 == cbet1:
-        sbet2 = sbet1 if sbet2 < 0 else -sbet1
+        sbet2 = math.copysign(sbet1, sbet2)
     else:
       if abs(sbet2) == -sbet1:
         cbet2 = cbet1
@@ -795,7 +789,7 @@ class Geodesic(object):
       ssig2 = sbet2; csig2 = calp2 * cbet2
 
       # sig12 = sig2 - sig1
-      sig12 = math.atan2(max(0.0, csig1 * ssig2 - ssig1 * csig2),
+      sig12 = math.atan2(max(0.0, csig1 * ssig2 - ssig1 * csig2) + 0.0,
                                   csig1 * csig2 + ssig1 * ssig2)
 
       s12x, m12x, dummy, M12, M21 = self._Lengths(
@@ -822,7 +816,7 @@ class Geodesic(object):
         meridian = False
     # end if meridian:
 
-    # somg12 > 1 marks that it needs to be calculated
+    # somg12 == 2 marks that it needs to be calculated
     somg12 = 2.0; comg12 = 0.0; omg12 = 0.0
     if (not meridian and
         sbet1 == 0 and   # and sbet2 == 0
@@ -973,7 +967,7 @@ class Geodesic(object):
         # Avoid problems with indeterminate sig1, sig2 on equator
         S12 = 0.0
 
-      if not meridian and somg12 > 1:
+      if not meridian and somg12 == 2.0:
         somg12 = math.sin(omg12); comg12 = math.cos(omg12)
 
       if (not meridian and

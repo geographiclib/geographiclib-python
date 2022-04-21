@@ -51,7 +51,7 @@ The public attributes for this class are
 #    https://doi.org/10.1007/s00190-012-0578-z
 #    Addenda: https://geographiclib.sourceforge.io/geod-addenda.html
 #
-# Copyright (c) Charles Karney (2011-2019) <charles@karney.com> and licensed
+# Copyright (c) Charles Karney (2011-2022) <charles@karney.com> and licensed
 # under the MIT/X11 License.  For more information, see
 # https://geographiclib.sourceforge.io/
 ######################################################################
@@ -60,13 +60,13 @@ import math
 from geographiclib.geomath import Math
 from geographiclib.geodesiccapability import GeodesicCapability
 
-class GeodesicLine(object):
+class GeodesicLine:
   """Points on a geodesic path"""
 
   def __init__(self, geod, lat1, lon1, azi1,
                caps = GeodesicCapability.STANDARD |
                GeodesicCapability.DISTANCE_IN,
-               salp1 = Math.nan, calp1 = Math.nan):
+               salp1 = math.nan, calp1 = math.nan):
     """Construct a GeodesicLine object
 
     :param geod: a :class:`~geographiclib.geodesic.Geodesic` object
@@ -100,7 +100,7 @@ class GeodesicLine(object):
     """the latitude of the first point in degrees (readonly)"""
     self.lon1 = lon1
     """the longitude of the first point in degrees (readonly)"""
-    if Math.isnan(salp1) or Math.isnan(calp1):
+    if math.isnan(salp1) or math.isnan(calp1):
       self.azi1 = Math.AngNormalize(azi1)
       self.salp1, self.calp1 = Math.sincosd(Math.AngRound(azi1))
     else:
@@ -180,16 +180,16 @@ class GeodesicLine(object):
       self._A4 = Math.sq(self.a) * self._calp0 * self._salp0 * geod._e2
       self._B41 = Geodesic._SinCosSeries(
         False, self._ssig1, self._csig1, self._C4a)
-    self.s13 = Math.nan
+    self.s13 = math.nan
     """the distance between point 1 and point 3 in meters (readonly)"""
-    self.a13 = Math.nan
+    self.a13 = math.nan
     """the arc length between point 1 and point 3 in degrees (readonly)"""
 
   # return a12, lat2, lon2, azi2, s12, m12, M12, M21, S12
   def _GenPosition(self, arcmode, s12_a12, outmask):
     """Private: General solution of position along geodesic"""
     from geographiclib.geodesic import Geodesic
-    a12 = lat2 = lon2 = azi2 = s12 = m12 = M12 = M21 = S12 = Math.nan
+    a12 = lat2 = lon2 = azi2 = s12 = m12 = M12 = M21 = S12 = math.nan
     outmask &= self.caps & Geodesic.OUT_MASK
     if not (arcmode or
             (self.caps & (Geodesic.OUT_MASK & Geodesic.DISTANCE_IN))):
@@ -205,7 +205,7 @@ class GeodesicLine(object):
     else:
       # Interpret s12_a12 as distance
       tau12 = s12_a12 / (self._b * (1 + self._A1m1))
-      tau12 = tau12 if Math.isfinite(tau12) else Math.nan
+      tau12 = tau12 if math.isfinite(tau12) else math.nan
       s = math.sin(tau12); c = math.cos(tau12)
       # tau2 = tau1 + tau12
       B12 = - Geodesic._SinCosSeries(True,
@@ -272,7 +272,7 @@ class GeodesicLine(object):
     if outmask & Geodesic.LONGITUDE:
       # tan(omg2) = sin(alp0) * tan(sig2)
       somg2 = self._salp0 * ssig2; comg2 = csig2 # No need to normalize
-      E = Math.copysign(1, self._salp0)          # East or west going?
+      E = math.copysign(1, self._salp0)          # East or west going?
       # omg12 = omg2 - omg1
       omg12 = (E * (sig12
                     - (math.atan2(          ssig2,       csig2) -

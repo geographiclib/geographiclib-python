@@ -10,6 +10,8 @@ Author: Charles F. F. Karney (charles@karney.com)
 
 Version: |version|
 
+Date: |today|
+
 The documentation for other versions is available at
 ``https://geographiclib.sourceforge.io/m.nn/python/`` for versions numbers
 ``m.nn`` ≥ 1.46.

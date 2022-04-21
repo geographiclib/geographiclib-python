@@ -39,7 +39,7 @@ The public attributes for this class are
 #    https://doi.org/10.1007/s00190-012-0578-z
 #    Addenda: https://geographiclib.sourceforge.io/geod-addenda.html
 #
-# Copyright (c) Charles Karney (2011-2019) <charles@karney.com> and licensed
+# Copyright (c) Charles Karney (2011-2022) <charles@karney.com> and licensed
 # under the MIT/X11 License.  For more information, see
 # https://geographiclib.sourceforge.io/
 ######################################################################
@@ -47,34 +47,34 @@ The public attributes for this class are
 import math
 from geographiclib.geomath import Math
 from geographiclib.accumulator import Accumulator
+from geographiclib.geodesic import Geodesic
 
-class PolygonArea(object):
+class PolygonArea:
   """Area of a geodesic polygon"""
 
+  @staticmethod
   def _transit(lon1, lon2):
     """Count crossings of prime meridian for AddPoint."""
     # Return 1 or -1 if crossing prime meridian in east or west direction.
     # Otherwise return zero.
     # Compute lon12 the same way as Geodesic::Inverse.
+    lon12, _ = Math.AngDiff(lon1, lon2)
     lon1 = Math.AngNormalize(lon1)
     lon2 = Math.AngNormalize(lon2)
-    lon12, _ = Math.AngDiff(lon1, lon2)
-    cross = (1 if lon1 <= 0 and lon2 > 0 and lon12 > 0
-             else (-1 if lon2 <= 0 and lon1 > 0 and lon12 < 0 else 0))
-    return cross
-  _transit = staticmethod(_transit)
+    return (1 if lon12 > 0 and ( lon1 < 0 <= lon2 or
+                                (lon1 > 0 and lon2 == 0))
+            else (-1 if lon12 < 0 and lon2 < 0 <= lon1 else 0))
 
+  @staticmethod
   def _transitdirect(lon1, lon2):
     """Count crossings of prime meridian for AddEdge."""
     # We want to compute exactly
-    #   int(ceil(lon2 / 360)) - int(ceil(lon1 / 360))
-    # Since we only need the parity of the result we can use std::remquo but
-    # this is buggy with g++ 4.8.3 and requires C++11.  So instead we do
-    lon1 = math.fmod(lon1, 720.0); lon2 = math.fmod(lon2, 720.0)
-    return ( (1 if ((lon2 <= 0 and lon2 > -360) or lon2 > 360) else 0) -
-             (1 if ((lon1 <= 0 and lon1 > -360) or lon1 > 360) else 0) )
-  _transitdirect = staticmethod(_transitdirect)
+    #   int(floor(lon2 / 360)) - int(floor(lon1 / 360))
+    lon1 = Math.remainder(lon1, 720.0); lon2 = Math.remainder(lon2, 720.0)
+    return ( (0 if 0 <= lon2 < 360 else 1) -
+             (0 if 0 <= lon1 < 360 else 1) )
 
+  @staticmethod
   def _areareduceA(area, area0, crossings, reverse, sign):
     """Reduce accumulator area to allowed range."""
     area.Remainder(area0)
@@ -96,8 +96,8 @@ class PolygonArea(object):
         area.Add(  area0 )
 
     return 0.0 + area.Sum()
-  _areareduceA = staticmethod(_areareduceA)
 
+  @staticmethod
   def _areareduceB(area, area0, crossings, reverse, sign):
     """Reduce double area to allowed range."""
     area = Math.remainder(area, area0)
@@ -119,7 +119,6 @@ class PolygonArea(object):
         area += area0
 
     return 0.0 + area
-  _areareduceB = staticmethod(_areareduceB)
 
   def __init__(self, earth, polyline = False):
     """Construct a PolygonArea object
@@ -130,7 +129,6 @@ class PolygonArea(object):
     Initially the polygon has no vertices.
     """
 
-    from geographiclib.geodesic import Geodesic
     self.earth = earth
     """The geodesic object (readonly)"""
     self.polyline = polyline
@@ -145,11 +143,12 @@ class PolygonArea(object):
     self._perimetersum = Accumulator()
     self.num = 0
     """The current number of points in the polygon (readonly)"""
-    self.lat1 = Math.nan
+    self.lat1 = math.nan
     """The current latitude in degrees (readonly)"""
-    self.lon1 = Math.nan
+    self.lon1 = math.nan
     """The current longitude in degrees (readonly)"""
-    self.Clear()
+    self._crossings = 0
+    self._lat0 = self._lon0 = math.nan
 
   def Clear(self):
     """Reset to empty polygon."""
@@ -157,7 +156,7 @@ class PolygonArea(object):
     self._crossings = 0
     if not self.polyline: self._areasum.Set(0)
     self._perimetersum.Set(0)
-    self._lat0 = self._lon0 = self.lat1 = self.lon1 = Math.nan
+    self._lat0 = self._lon0 = self.lat1 = self.lon1 = math.nan
 
   def AddPoint(self, lat, lon):
     """Add the next vertex to the polygon
@@ -227,7 +226,7 @@ class PolygonArea(object):
     More points can be added to the polygon after this call.
 
     """
-    if self.polyline: area = Math.nan
+    if self.polyline: area = math.nan
     if self.num < 2:
       perimeter = 0.0
       if not self.polyline: area = 0.0
@@ -261,7 +260,7 @@ class PolygonArea(object):
     :return: a tuple of number, perimeter (meters), area (meters^2)
 
     """
-    if self.polyline: area = Math.nan
+    if self.polyline: area = math.nan
     if self.num == 0:
       perimeter = 0.0
       if not self.polyline: area = 0.0
@@ -304,11 +303,11 @@ class PolygonArea(object):
     """
 
     if self.num == 0:           # we don't have a starting point!
-      return 0, Math.nan, Math.nan
+      return 0, math.nan, math.nan
     num = self.num + 1
     perimeter = self._perimetersum.Sum() + s
     if self.polyline:
-      return num, perimeter, Math.nan
+      return num, perimeter, math.nan
 
     tempsum =  self._areasum.Sum()
     crossings = self._crossings

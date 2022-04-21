@@ -1,0 +1,102 @@
+cmake cache values
+Python_VERSION_NUMBER 3.7
+
+cmake targets:
+
+  all = package + doc
+  install =  python -m pip install -q --prefix ${CMAKE_INSTALL_PREFIX} ${WHEEL}
+    installs to lib/python3.10/site-packages/geographiclib
+
+  stage-doc
+  stage-dist
+  deploy-doc
+  deploy-dist
+
+https://pypi.org/project/geographiclib
+Version update checks
+
+# python
+#   python/setup.py
+#   python/geographiclib/__init__.py
+#   python/doc/index.rst (date + update change log)
+#   python/README.md
+# use: cd python; pylint geographiclib/*.py (need to reduce noise!)
+
+# python release -- authentication via ~/.pypirc
+# New method in
+# https://packaging.python.org/tutorials/packaging-projects/#uploading-your-project-to-pypi
+cd $TEMP/gita/geographiclib/python
+python3 setup.py sdist bdist_wheel
+python3 -m twine upload dist/*
+# installs in /usr/local/lib/python3.7/site-packages/geographiclib
+cd; sudo python3 -m pip install --upgrade geographiclib
+
+================================================================
+
+
+conda-forge maintainers:
+https://github.com/ocefpaf
+https://github.com/QuLogic
+https://github.com/beckermr
+
+from makefile-admin:
+
+distrib-python: python/setup.py
+  cd python && python setup.py sdist --formats=gztar,zip upload
+
+Fedora:
+/usr/lib/python3.7/site-packages/geographiclib
+/usr/lib/python3.7/site-packages/geographiclib-1.49-py3.7.egg-info
+/usr/lib/python3.7/site-packages/geographiclib/__init__.py
+/usr/lib/python3.7/site-packages/geographiclib/polygonarea.py
+/usr/lib/python3.7/site-packages/geographiclib/test
+/usr/lib/python3.7/site-packages/geographiclib/test/__init__.py
+/usr/lib/python3.7/site-packages/geographiclib/test/__pycache__
+/usr/lib/python3.7/site-packages/geographiclib/test/__pycache__/__init__.cpython-37.opt-1.pyc
+/usr/lib/python3.7/site-packages/geographiclib/test/__pycache__/__init__.cpython-37.pyc
+/usr/lib/python3.7/site-packages/geographiclib/test/__pycache__/test_geodesic.cpython-37.opt-1.pyc
+/usr/lib/python3.7/site-packages/geographiclib/test/__pycache__/test_geodesic.cpython-37.pyc
+/usr/lib/python3.7/site-packages/geographiclib/test/test_geodesic.py
+/usr/share/licenses/python3-GeographicLib
+/usr/share/licenses/python3-GeographicLib/LICENSE.txt
+
+Ubuntu
+============= python-geographiclib ==============
+/.
+/usr
+/usr/lib
+/usr/lib/python2.7
+/usr/lib/python2.7/dist-packages
+/usr/lib/python2.7/dist-packages/geographiclib
+/usr/lib/python2.7/dist-packages/geographiclib/__init__.py
+/usr/lib/python2.7/dist-packages/geographiclib/accumulator.py
+/usr/lib/python2.7/dist-packages/geographiclib/constants.py
+/usr/lib/python2.7/dist-packages/geographiclib/polygonarea.py
+/usr/lib/python2.7/dist-packages/geographiclib/test
+/usr/lib/python2.7/dist-packages/geographiclib/test/__init__.py
+/usr/lib/python2.7/dist-packages/geographiclib/test/test_geodesic.py
+/usr/lib/python2.7/dist-packages/geographiclib-1.49.egg-info
+/usr/share
+/usr/share/doc
+/usr/share/doc/python-geographiclib
+/usr/share/doc/python-geographiclib/changelog.Debian.gz
+/usr/share/doc/python-geographiclib/copyright
+============= python3-geographiclib ==============
+/.
+/usr
+/usr/lib
+/usr/lib/python3
+/usr/lib/python3/dist-packages
+/usr/lib/python3/dist-packages/geographiclib
+/usr/lib/python3/dist-packages/geographiclib/__init__.py
+/usr/lib/python3/dist-packages/geographiclib/accumulator.py
+/usr/lib/python3/dist-packages/geographiclib/polygonarea.py
+/usr/lib/python3/dist-packages/geographiclib/test
+/usr/lib/python3/dist-packages/geographiclib/test/__init__.py
+/usr/lib/python3/dist-packages/geographiclib/test/test_geodesic.py
+/usr/lib/python3/dist-packages/geographiclib-1.49.egg-info
+/usr/share
+/usr/share/doc
+/usr/share/doc/python3-geographiclib
+/usr/share/doc/python3-geographiclib/changelog.Debian.gz
+/usr/share/doc/python3-geographiclib/copyright

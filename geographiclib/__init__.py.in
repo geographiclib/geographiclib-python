@@ -1,0 +1,12 @@
+"""geographiclib: geodesic routines from GeographicLib"""
+
+__version_info__ = (@PROJECT_VERSION_MAJOR@,
+                    @PROJECT_VERSION_MINOR@,
+                    @PROJECT_VERSION_PATCH@)
+"""GeographicLib version as a tuple"""
+
+__version__ = "@PROJECT_FULLVERSION@"
+"""GeographicLib version as a string"""
+
+__release_date__ = "@RELEASE_DATE@"
+"""GeographicLib release date"""
