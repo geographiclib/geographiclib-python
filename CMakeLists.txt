@@ -1,5 +1,8 @@
 project (GeographicLib-Python NONE)
 
+# need to replace hyphen by underscore
+set (PROJECT_NAME_LOWER geographiclib_python)
+
 # Version information
 set (PROJECT_VERSION_MAJOR 2)
 set (PROJECT_VERSION_MINOR 0)
@@ -68,8 +71,8 @@ foreach (f __init__.py ${PYTHON_FILES} ${TEST_FILES})
     ${ALLDEPENDS} "${CMAKE_CURRENT_BINARY_DIR}/geographiclib/${f}")
 endforeach  ()
 
-set (SDIST dist/geographiclib-${PROJECT_FULLVERSION}.tar.gz)
-set (WHEEL dist/geographiclib-${PROJECT_FULLVERSION}-py3-none-any.whl)
+set (SDIST dist/${PROJECT_NAME_LOWER}-${PROJECT_FULLVERSION}.tar.gz)
+set (WHEEL dist/${PROJECT_NAME_LOWER}-${PROJECT_FULLVERSION}-py3-none-any.whl)
 add_custom_command (OUTPUT ${SDIST} ${WHEEL}
   COMMAND ${Python_EXECUTABLE} -m build
   DEPENDS ${ALLDEPENDS}

@@ -21,7 +21,7 @@
 
 import setuptools
 
-name = "geographiclib"
+name = "geographiclib_python"
 version = "@PROJECT_FULLVERSION@"
 
 with open("README.md", "r") as fh:

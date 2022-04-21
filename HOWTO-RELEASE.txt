@@ -31,6 +31,19 @@ python3 -m twine upload dist/*
 # installs in /usr/local/lib/python3.7/site-packages/geographiclib
 cd; sudo python3 -m pip install --upgrade geographiclib
 
+================================================================
+
+
+conda-forge maintainers:
+https://github.com/ocefpaf
+https://github.com/QuLogic
+https://github.com/beckermr
+
+from makefile-admin:
+
+distrib-python: python/setup.py
+  cd python && python setup.py sdist --formats=gztar,zip upload
+
 Fedora:
 /usr/lib/python3.7/site-packages/geographiclib
 /usr/lib/python3.7/site-packages/geographiclib-1.49-py3.7.egg-info
