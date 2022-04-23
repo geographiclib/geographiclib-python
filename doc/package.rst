@@ -21,8 +21,8 @@ and install it with
 
 .. code-block:: sh
 
-  tar xpfz geographiclib-1.52.tar.gz
-  cd geographiclib-1.52
+  tar xpfz geographiclib-2.0.tar.gz
+  cd geographiclib-2.0
   python setup.py install
 
 It's a good idea to run the unit tests to verify that the installation
@@ -49,7 +49,7 @@ Other links
 Change log
 ----------
 
-* Version 2.0 (released 2022-mm-dd)
+* Version 2.0 (released 2022-04-23)
 
   * Minimum version of Python supported in 3.7.  Support for Python 2.x
     has been dropped.
@@ -72,6 +72,8 @@ Change log
     * When computing longitude differences, if λ\ :sub:`2` − λ\ :sub:`1`
       = ±180° (mod 360°), then the sign is picked depending on the sign
       of the difference.
+    * The normal range for returned longitudes and azimuths is
+      [−180°, 180°].
     * A separate test suite test_sign has been added to check this
       treatment.
 

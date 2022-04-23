@@ -13,10 +13,10 @@ if (PROJECT_VERSION_PATCH GREATER 0)
 endif ()
 # Follow Python conventions on the version suffix: {a,b,rc}N, see
 # https://www.python.org/dev/peps/pep-0440
-set (PROJECT_VERSION_SUFFIX "a0")
+set (PROJECT_VERSION_SUFFIX "")
 set (PROJECT_FULLVERSION "${PROJECT_VERSION}${PROJECT_VERSION_SUFFIX}")
 
-set (RELEASE_DATE "2022-mm-dd")
+set (RELEASE_DATE "2022-04-23")
 
 cmake_minimum_required (VERSION 3.13.0)
 
