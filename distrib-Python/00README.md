@@ -1,7 +1,7 @@
 # Python implementation of the geodesic routines in GeographicLib
 
-Source packages are `.tar.gz` files.  Built package are the
-`.whl` files.  To install the dist run
+Source packages are `.tar.gz` files.  Built package are the `.whl`
+files.  To install the dist run
 ```bash
 python -m pip install [WHEEL-FILE]
 ```

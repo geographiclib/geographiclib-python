@@ -4,26 +4,32 @@ Python_VERSION_NUMBER 3.7
 cmake targets:
 
   all = package + doc
+  lint
+  sanitize
   install =  python -m pip install -q --prefix ${CMAKE_INSTALL_PREFIX} ${WHEEL}
     installs to lib/python3.10/site-packages/geographiclib
 
   stage-doc
   stage-dist
-  deploy-doc
-  deploy-dist
+  deploy-doc      -- upload to sourceforge
+  deploy-dist     -- upload packages to sourceforge
+  deploy-package  -- upload packages to pypi
 
 https://pypi.org/project/geographiclib
 Version update checks
 
-# python
-#   python/setup.py
-#   python/geographiclib/__init__.py
-#   python/doc/index.rst (date + update change log)
-#   python/README.md
-# use: cd python; pylint geographiclib/*.py (need to reduce noise!)
+CMakeLists.txt verson + date
 
-# python release -- authentication via ~/.pypirc
-# New method in
+https://packaging.python.org/en/latest/tutorials/packaging-projects/#uploading-your-project-to-pypi
+
+python release -- authentication via ~/.pypirc
+PIP maintenance
+  python -m pip install --upgrade build
+  python -m pip install --upgrade twine
+
+build invoked by make package
+twine invoked by make deploy-package
+# New method in https://test.pypi.org/
 # https://packaging.python.org/tutorials/packaging-projects/#uploading-your-project-to-pypi
 cd $TEMP/gita/geographiclib/python
 python3 setup.py sdist bdist_wheel
@@ -32,7 +38,6 @@ python3 -m twine upload dist/*
 cd; sudo python3 -m pip install --upgrade geographiclib
 
 ================================================================
-
 
 conda-forge maintainers:
 https://github.com/ocefpaf

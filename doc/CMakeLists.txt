@@ -1,5 +1,5 @@
 set (FILES conf.py
-  index.rst geodesics.rst interface.rst code.rst examples.rst)
+  index.rst package.rst geodesics.rst interface.rst code.rst examples.rst)
 set (SOURCES)
 foreach (f ${SOURCES})
   set (SOURCES ${SOURCES} "../geographiclib/${f}")

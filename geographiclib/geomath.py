@@ -93,7 +93,7 @@ class Math:
 
   @staticmethod
   def AngNormalize(x):
-    """reduce angle to (-180,180]"""
+    """reduce angle to [-180,180]"""
 
     y = Math.remainder(x, 360)
     return math.copysign(180.0, x) if abs(y) == 180 else y

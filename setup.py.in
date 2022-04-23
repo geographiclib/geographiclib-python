@@ -21,7 +21,7 @@
 
 import setuptools
 
-name = "geographiclib_python"
+name = "geographiclib"
 version = "@PROJECT_FULLVERSION@"
 
 with open("README.md", "r") as fh:
@@ -35,7 +35,7 @@ setuptools.setup(
   description = "The geodesic routines from GeographicLib",
   long_description = long_description,
   long_description_content_type = "text/markdown",
-  url = "https://geographiclib.sourceforge.io/Python/" + version,
+  url = "https://geographiclib.sourceforge.io/Python/@PROJECT_VERSION@" ,
   include_package_data = True,
   packages = setuptools.find_packages(),
   license = "MIT",

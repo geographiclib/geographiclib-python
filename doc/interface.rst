@@ -84,7 +84,7 @@ the arc length.)  This only makes sense in the *caps* parameter.
 
 LONG_UNROLL controls the treatment of longitude. If it is not set then
 the *lon1* and *lon2* fields are both reduced to the range [−180°,
-180°). If it is set, then *lon1* is as given in the function call and
+180°]. If it is set, then *lon1* is as given in the function call and
 (*lon2* − *lon1*) determines how many times and in what sense the
 geodesic has encircled the ellipsoid.  This only makes sense in the
 *outmask* parameter.
@@ -104,7 +104,7 @@ Restrictions on the parameters
   curves on the surface.
 * Similarly, the spherical arc length *a12* is unrestricted.
 * Longitudes and azimuths are unrestricted; internally these are
-  exactly reduced to the range [−180°, 180°); but see also the
+  exactly reduced to the range [−180°, 180°]; but see also the
   LONG_UNROLL bit.
 * The equatorial radius *a* and the polar semi-axis *b* must both be
   positive and finite (this implies that −∞ < *f* < 1).
