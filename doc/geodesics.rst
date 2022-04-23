@@ -1,34 +1,25 @@
 Geodesics on an ellipsoid
 =========================
 
-Jump to
-
-* :ref:`intro`
-* :ref:`solution`
-* :ref:`additional`
-* :ref:`multiple`
-* :ref:`area`
-* :ref:`background`
-* :ref:`references`
-
 .. _intro:
 
 Introduction
 ------------
 
-Consider an ellipsoid of revolution with equatorial radius :math:`a`, polar
-semi-axis :math:`b`, and flattening :math:`f=(a-b)/a`.  Points on
-the surface of the ellipsoid are characterized by their latitude :math:`\phi`
-and longitude :math:`\lambda`.  (Note that latitude here means the
+Consider an ellipsoid of revolution with equatorial radius *a*, polar
+semi-axis *b*, and flattening *f* = (*a* − *b*)/*a* .  Points on
+the surface of the ellipsoid are characterized by their latitude φ
+and longitude λ.  (Note that latitude here means the
 *geographical latitude*, the angle between the normal to the ellipsoid
 and the equatorial plane).
 
 The shortest path between two points on the ellipsoid at
-:math:`(\phi_1,\lambda_1)` and :math:`(\phi_2,\lambda_2)`
-is called the geodesic.  Its length is
-:math:`s_{12}` and the geodesic from point 1 to point 2 has forward
-azimuths :math:`\alpha_1` and :math:`\alpha_2` at the two end
-points.  In this figure, we have :math:`\lambda_{12}=\lambda_2-\lambda_1`.
+(φ\ :sub:`1`, λ\ :sub:`1`) and (φ\ :sub:`2`,
+λ\ :sub:`2`) is called the geodesic.  Its length is
+*s*\ :sub:`12` and the geodesic from point 1 to point 2 has forward
+azimuths α\ :sub:`1` and α\ :sub:`2` at the two end
+points.  In this figure, we have λ\ :sub:`12` =
+λ\ :sub:`2` − λ\ :sub:`1`.
 
     .. raw:: html
 
@@ -49,16 +40,16 @@ Solution of geodesic problems
 
 Traditionally two geodesic problems are considered:
 
-* the direct problem — given :math:`\phi_1`,
-  :math:`\lambda_1`, :math:`\alpha_1`, :math:`s_{12}`,
-  determine :math:`\phi_2`, :math:`\lambda_2`, :math:`\alpha_2`;
-  this is solved by
+* the direct problem — given φ\ :sub:`1`,
+  λ\ :sub:`1`, α\ :sub:`1`, *s*\ :sub:`12`,
+  determine φ\ :sub:`2`, λ\ :sub:`2`, and
+  α\ :sub:`2`; this is solved by
   :meth:`Geodesic.Direct <geographiclib.geodesic.Geodesic.Direct>`.
 
-* the inverse problem — given  :math:`\phi_1`,
-  :math:`\lambda_1`,  :math:`\phi_2`, :math:`\lambda_2`,
-  determine :math:`s_{12}`, :math:`\alpha_1`,
-  :math:`\alpha_2`; this is solved by
+* the inverse problem — given φ\ :sub:`1`,
+  λ\ :sub:`1`, φ\ :sub:`2`, λ\ :sub:`2`,
+  determine *s*\ :sub:`12`, α\ :sub:`1`, and
+  α\ :sub:`2`; this is solved by
   :meth:`Geodesic.Inverse <geographiclib.geodesic.Geodesic.Inverse>`.
 
 .. _additional:
@@ -68,41 +59,47 @@ Additional properties
 
 The routines also calculate several other quantities of interest
 
-* :math:`S_{12}` is the area between the geodesic from point 1 to
+* *S*\ :sub:`12` is the area between the geodesic from point 1 to
   point 2 and the equator; i.e., it is the area, measured
   counter-clockwise, of the quadrilateral with corners
-  :math:`(\phi_1,\lambda_1)`, :math:`(0,\lambda_1)`,
-  :math:`(0,\lambda_2)`, and
-  :math:`(\phi_2,\lambda_2)`.  It is given in
+  (φ\ :sub:`1`,λ\ :sub:`1`), (0,λ\ :sub:`1`),
+  (0,λ\ :sub:`2`), and
+  (φ\ :sub:`2`,λ\ :sub:`2`).  It is given in
   meters\ :sup:`2`.
-* :math:`m_{12}`, the reduced length of the geodesic is defined such
-  that if the initial azimuth is perturbed by :math:`d\alpha_1`
-  (radians) then the second point is displaced by :math:`m_{12}\,d\alpha_1`
-  in the direction perpendicular to the
-  geodesic.  :math:`m_{12}` is given in meters.  On a curved surface
-  the reduced length obeys a symmetry relation, :math:`m_{12}+m_{21}=0`.
-  On a flat surface, we have :math:`m_{12}=s_{12}`.
-* :math:`M_{12}` and :math:`M_{21}` are geodesic scales.  If two
+* *m*\ :sub:`12`, the reduced length of the geodesic is defined such
+  that if the initial azimuth is perturbed by *d*\ α\ :sub:`1`
+  (radians) then the second point is displaced by *m*\ :sub:`12`
+  *d*\ α\ :sub:`1` in the direction perpendicular to the
+  geodesic.  *m*\ :sub:`12` is given in meters.  On a curved surface
+  the reduced length obeys a symmetry relation, *m*\ :sub:`12` +
+  *m*\ :sub:`21` = 0.  On a flat surface, we have *m*\ :sub:`12` =
+  *s*\ :sub:`12`.
+* *M*\ :sub:`12` and *M*\ :sub:`21` are geodesic scales.  If two
   geodesics are parallel at point 1 and separated by a small distance
-  :math:`dt`, then they are separated by a distance :math:`M_{12}\,dt` at
-  point 2.  :math:`M_{21}` is defined similarly (with the geodesics
-  being parallel to one another at point 2).  :math:`M_{12}` and
-  :math:`M_{21}` are dimensionless quantities.  On a flat surface,
-  we have :math:`M_{12}=M_{21}=1`.
-* :math:`\sigma_{12}` is the arc length on the auxiliary sphere.
+  *dt*, then they are separated by a distance *M*\ :sub:`12` *dt* at
+  point 2.  *M*\ :sub:`21` is defined similarly (with the geodesics
+  being parallel to one another at point 2).  *M*\ :sub:`12` and
+  *M*\ :sub:`21` are dimensionless quantities.  On a flat surface,
+  we have *M*\ :sub:`12` = *M*\ :sub:`21` = 1.
+* σ\ :sub:`12` is the arc length on the auxiliary sphere.
   This is a construct for converting the problem to one in spherical
   trigonometry.  The spherical arc length from one equator crossing to
-  the next is always :math:`180^\circ`.
+  the next is always 180°.
 
 If points 1, 2, and 3 lie on a single geodesic, then the following
 addition rules hold:
 
-* :math:`s_{13}=s_{12}+s_{23}`,
-* :math:`\sigma_{13}=\sigma_{12}+\sigma_{23}`,
-* :math:`S_{13}=S_{12}+S_{23}`,
-* :math:`m_{13}=m_{12}M_{23}+m_{23}M_{21}`,
-* :math:`M_{13}=M_{12}M_{23}-(1-M_{12}M_{21})m_{23}/m_{12}`,
-* :math:`M_{31}=M_{32}M_{21}-(1-M_{23}M_{32})m_{12}/m_{23}`.
+* *s*\ :sub:`13` = *s*\ :sub:`12` + *s*\ :sub:`23`
+* σ\ :sub:`13` = σ\ :sub:`12` + σ\ :sub:`23`
+* *S*\ :sub:`13` = *S*\ :sub:`12` + *S*\ :sub:`23`
+* *m*\ :sub:`13` = *m*\ :sub:`12`\ *M*\ :sub:`23` +
+  *m*\ :sub:`23`\ *M*\ :sub:`21`
+* *M*\ :sub:`13` = *M*\ :sub:`12`\ *M*\ :sub:`23` −
+  (1 − *M*\ :sub:`12`\ *M*\ :sub:`21`)
+  *m*\ :sub:`23`/*m*\ :sub:`12`
+* *M*\ :sub:`31` = *M*\ :sub:`32`\ *M*\ :sub:`21` −
+  (1 − *M*\ :sub:`23`\ *M*\ :sub:`32`)
+  *m*\ :sub:`12`/*m*\ :sub:`23`
 
 .. _multiple:
 
@@ -114,45 +111,47 @@ The shortest distance found by solving the inverse problem is
 multiple azimuths which yield the same shortest distance.  Here is a
 catalog of those cases:
 
-* :math:`\phi_1=-\phi_2` (with neither point at
-  a pole).  If :math:`\alpha_1=\alpha_2`, the geodesic
+* φ\ :sub:`1` = −φ\ :sub:`2` (with neither point at
+  a pole).  If α\ :sub:`1` = α\ :sub:`2`, the geodesic
   is unique.  Otherwise there are two geodesics and the second one is
-  obtained by setting
-  :math:`[\alpha_1,\alpha_2]\leftarrow[\alpha_2,\alpha_1]`,
-  :math:`[M_{12},M_{21}]\leftarrow[M_{21},M_{12}]`,
-  :math:`S_{12}\leftarrow-S_{12}`.
-  (This occurs when the longitude difference is near :math:`\pm180^\circ`
-  for oblate ellipsoids.)
-* :math:`\lambda_2=\lambda_1\pm180^\circ` (with
-  neither point at a pole).  If :math:`\alpha_1=0^\circ` or
-  :math:`\pm180^\circ`, the geodesic is unique.  Otherwise there are two
+  obtained by setting [α\ :sub:`1`,α\ :sub:`2`] ←
+  [α\ :sub:`2`,α\ :sub:`1`],
+  [*M*\ :sub:`12`,\ *M*\ :sub:`21`] ←
+  [*M*\ :sub:`21`,\ *M*\ :sub:`12`], *S*\ :sub:`12` ←
+  −\ *S*\ :sub:`12`.  (This occurs when the longitude difference
+  is near ±180° for oblate ellipsoids.)
+* λ\ :sub:`2` = λ\ :sub:`1` ± 180° (with
+  neither point at a pole).  If α\ :sub:`1` = 0° or
+  ±180°, the geodesic is unique.  Otherwise there are two
   geodesics and the second one is obtained by setting
-  :math:`[\alpha_1,\alpha_2]\leftarrow[-\alpha_1,-\alpha_2]`,
-  :math:`S_{12}\leftarrow-S_{12}`.  (This occurs when
-  :math:`\phi_2` is near :math:`-\phi_1` for prolate
+  [α\ :sub:`1`,α\ :sub:`2`] ←
+  [−α\ :sub:`1`,−α\ :sub:`2`],
+  *S*\ :sub:`12` ← −\ *S*\ :sub:`12`.  (This occurs when
+  φ\ :sub:`2` is near −φ\ :sub:`1` for prolate
   ellipsoids.)
 * Points 1 and 2 at opposite poles.  There are infinitely many
   geodesics which can be generated by setting
-  :math:`[\alpha_1,\alpha_2]\leftarrow[\alpha_1,\alpha_2]+[\delta,-\delta]`,
-  for arbitrary :math:`\delta`.
-  (For spheres, this prescription applies when points 1 and 2 are
-  antipodal.)
-* :math:`s_{12}=0` (coincident points).  There are infinitely many
+  [α\ :sub:`1`,α\ :sub:`2`] ←
+  [α\ :sub:`1`,α\ :sub:`2`] +
+  [δ,−δ], for arbitrary δ.  (For spheres, this
+  prescription applies when points 1 and 2 are antipodal.)
+* *s*\ :sub:`12` = 0 (coincident points).  There are infinitely many
   geodesics which can be generated by setting
-  :math:`[\alpha_1,\alpha_2]\leftarrow[\alpha_1,\alpha_2]+[\delta,\delta]`,
-  for arbitrary :math:`\delta`.
+  [α\ :sub:`1`,α\ :sub:`2`] ←
+  [α\ :sub:`1`,α\ :sub:`2`] + [δ,δ], for
+  arbitrary δ.
 
 .. _area:
 
 Area of a polygon
 -----------------
 
-The area of a geodesic polygon can be determined by summing :math:`-S_{12}`
-for successive edges of the polygon (:math:`S_{12}` is negated so that
+The area of a geodesic polygon can be determined by summing *S*\ :sub:`12`
+for successive edges of the polygon (*S*\ :sub:`12` is negated so that
 clockwise traversal of a polygon gives a positive area).  However, if
 the polygon encircles a pole, the sum must be adjusted by
-:math:`\pm A/2`, where :math:`A` is the area of the full ellipsoid, with
-the sign chosen to place the result in :math:`(-A/2, A/2]`.
+±\ *A*/2, where *A* is the area of the full ellipsoid, with
+the sign chosen to place the result in (-*A*/2, *A*/2].
 
 .. _background:
 
@@ -200,15 +199,15 @@ References
   `Algorithms for geodesics
   <https://doi.org/10.1007/s00190-012-0578-z>`_,
   J. Geodesy **87**\ (1) 43–55 (2013);
-  `addenda <https://geographiclib.sourceforge.io/geod-addenda.html>`_.
+  `addenda <../../geod-addenda.html>`_.
 * C. F. F. Karney,
   `Geodesics on an ellipsoid of revolution
   <https://arxiv.org/abs/1102.1215v1>`_,
   Feb. 2011;
   `errata
-  <https://geographiclib.sourceforge.io/geod-addenda.html#geod-errata>`_.
+  <../../geod-addenda.html#geod-errata>`_.
 * `A geodesic bibliography
-  <https://geographiclib.sourceforge.io/geodesic-papers/biblio.html>`_.
+  <../../geodesic-papers/biblio.html>`_.
 * The wikipedia page,
   `Geodesics on an ellipsoid
   <https://en.wikipedia.org/wiki/Geodesics_on_an_ellipsoid>`_.

@@ -1,7 +1,7 @@
 project (GeographicLib-Python NONE)
 
-# need to replace hyphen by underscore
-set (PROJECT_NAME_LOWER geographiclib_python)
+# The project name for python
+set (PYTHON_PROJECT_NAME geographiclib)
 
 # Version information
 set (PROJECT_VERSION_MAJOR 2)
@@ -71,14 +71,18 @@ foreach (f __init__.py ${PYTHON_FILES} ${TEST_FILES})
     ${ALLDEPENDS} "${CMAKE_CURRENT_BINARY_DIR}/geographiclib/${f}")
 endforeach  ()
 
-set (SDIST dist/${PROJECT_NAME_LOWER}-${PROJECT_FULLVERSION}.tar.gz)
-set (WHEEL dist/${PROJECT_NAME_LOWER}-${PROJECT_FULLVERSION}-py3-none-any.whl)
+set (SDIST dist/${PYTHON_PROJECT_NAME}-${PROJECT_FULLVERSION}.tar.gz)
+set (WHEEL dist/${PYTHON_PROJECT_NAME}-${PROJECT_FULLVERSION}-py3-none-any.whl)
 add_custom_command (OUTPUT ${SDIST} ${WHEEL}
   COMMAND ${Python_EXECUTABLE} -m build
   DEPENDS ${ALLDEPENDS}
   COMMENT "Creating packages")
 
 add_custom_target (package ALL DEPENDS ${SDIST} ${WHEEL})
+
+add_custom_target (deploy-package
+  COMMAND ${Python_EXECUTABLE} -m twine upload ${SDIST} ${WHEEL}
+  DEPENDS package)
 
 set (INSTALL_COMMAND
   "-m pip install -q --prefix ${CMAKE_INSTALL_PREFIX} ${WHEEL}")
@@ -107,7 +111,7 @@ if (IS_DIRECTORY ${PROJECT_SOURCE_DIR}/.git AND NOT WIN32)
   add_dependencies (sanitize checktrailingspace checktabs checkblanklines)
 
   find_program (RSYNC rsync)
-  if (RSYNC)
+  if (IS_DIRECTORY ${PROJECT_SOURCE_DIR}/distrib-Python AND RSYNC)
     set (USER karney)
     set (DATAROOT $ENV{HOME}/web/geographiclib-files/distrib-Python)
     set (DOCROOT $ENV{HOME}/web/geographiclib-web/htdocs/Python)
@@ -116,9 +120,9 @@ if (IS_DIRECTORY ${PROJECT_SOURCE_DIR}/.git AND NOT WIN32)
 
     add_custom_target (stage-dist
       COMMAND ${CMAKE_COMMAND} -E copy_if_different
-       ${SDIST} ${WHEEL} ${PROJECT_SOURCE_DIR}/distrib-Python/
-      COMMAND ${RSYNC} --delete -a --exclude '*~'
-      ${PROJECT_SOURCE_DIR}/distrib-Python/ ${DATAROOT}/)
+        ${SDIST} ${WHEEL} ${PROJECT_SOURCE_DIR}/distrib-Python/
+      COMMAND ${RSYNC} --delete -av --exclude '*~'
+        ${PROJECT_SOURCE_DIR}/distrib-Python/ ${DATAROOT}/)
     add_dependencies (stage-dist package)
 
     if (SPHINX)
