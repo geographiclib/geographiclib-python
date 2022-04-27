@@ -15,15 +15,13 @@ To install this, run
 
   pip install geographiclib
 
-Alternatively downloaded the package directly from
-`Python Package Index <http://pypi.python.org/pypi/geographiclib>`_
+Alternatively downloaded the source package directly from
+`Python Package Index <https://pypi.org/project/geographiclib/>`_
 and install it with
 
 .. code-block:: sh
 
-  tar xpfz geographiclib-2.0.tar.gz
-  cd geographiclib-2.0
-  python setup.py install
+  pip install geographiclib-2.0.tar.gz
 
 It's a good idea to run the unit tests to verify that the installation
 worked OK by running
