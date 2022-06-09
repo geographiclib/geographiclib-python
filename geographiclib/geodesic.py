@@ -63,7 +63,7 @@ The public attributes for this class are
 # This is a rather literal translation of the GeographicLib::Geodesic class to
 # python.  See the documentation for the C++ class for more information at
 #
-#    https://geographiclib.sourceforge.io/html/annotated.html
+#    https://geographiclib.sourceforge.io/C++/doc/annotated.html
 #
 # The algorithms are derived in
 #
