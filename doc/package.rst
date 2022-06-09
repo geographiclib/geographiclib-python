@@ -35,7 +35,7 @@ Other links
 
 * Library documentation (all versions):
   `https://geographiclib.sourceforge.io/Python <..>`_
-* GIT repository: https://github.com/geographiclib/geographiclib-python
+* Git repository: https://github.com/geographiclib/geographiclib-python
   Releases are tagged in git as, e.g., v1.52, v2.0, etc.
 * Source distribution:
   https://sourceforge.net/projects/geographiclib/files/distrib-Python

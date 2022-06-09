@@ -19,7 +19,7 @@ The algorithms are documented in
 Other links:
 
 * Library documentation: https://geographiclib.sourceforge.io/Python/doc
-* GIT repository: https://github.com/geographiclib/geographiclib-python
+* Git repository: https://github.com/geographiclib/geographiclib-python
 * Source distribution:
   https://sourceforge.net/projects/geographiclib/files/distrib-Python
 * GeographicLib: https://geographiclib.sourceforge.io
