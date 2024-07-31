@@ -891,17 +891,18 @@ class Geodesic:
           numit += 1
           if numit < Geodesic.maxit1_ and dv > 0:
             dalp1 = -v/dv
-            sdalp1 = math.sin(dalp1); cdalp1 = math.cos(dalp1)
-            nsalp1 = salp1 * cdalp1 + calp1 * sdalp1
-            if nsalp1 > 0 and abs(dalp1) < math.pi:
-              calp1 = calp1 * cdalp1 - salp1 * sdalp1
-              salp1 = nsalp1
-              salp1, calp1 = Math.norm(salp1, calp1)
-              # In some regimes we don't get quadratic convergence because
-              # slope -> 0.  So use convergence conditions based on epsilon
-              # instead of sqrt(epsilon).
-              tripn = abs(v) <= 16 * Geodesic.tol0_
-              continue
+            if abs(dalp1) < math.pi:
+              sdalp1 = math.sin(dalp1); cdalp1 = math.cos(dalp1)
+              nsalp1 = salp1 * cdalp1 + calp1 * sdalp1
+              if nsalp1 > 0:
+                calp1 = calp1 * cdalp1 - salp1 * sdalp1
+                salp1 = nsalp1
+                salp1, calp1 = Math.norm(salp1, calp1)
+                # In some regimes we don't get quadratic convergence because
+                # slope -> 0.  So use convergence conditions based on epsilon
+                # instead of sqrt(epsilon).
+                tripn = abs(v) <= 16 * Geodesic.tol0_
+                continue
           # Either dv was not positive or updated value was outside
           # legal range.  Use the midpoint of the bracket as the next
           # estimate.  This mechanism is not needed for the WGS84
