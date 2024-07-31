@@ -17,7 +17,7 @@ endif ()
 set (PROJECT_VERSION_SUFFIX "dev1")
 set (PROJECT_FULLVERSION "${PROJECT_VERSION}${PROJECT_VERSION_SUFFIX}")
 
-set (RELEASE_DATE "2022-04-23")
+set (RELEASE_DATE "2024-mm-dd")
 
 # Set a default build type for single-configuration cmake generators if
 # no build type is set.
@@ -25,15 +25,16 @@ if (NOT CMAKE_CONFIGURATION_TYPES AND NOT CMAKE_BUILD_TYPE)
   set (CMAKE_BUILD_TYPE Release)
 endif ()
 
+# Minimum version of Python supported in 3.7 (for math.remainder).  Next
+# update will be to 3.10 (to catch the fix in math.hypot).
+set (Python_VERSION_NUMBER 3.7 CACHE STRING "The minimum version of Python")
+
 configure_file (setup.cfg.in setup.cfg @ONLY)
 set (EXTRA_FILES README.md LICENSE pyproject.toml)
 foreach (f ${EXTRA_FILES})
   configure_file (${f} ${f} COPYONLY)
 endforeach ()
 
-# Minimum version of Python supported in 3.7 (for math.remainder).  Next
-# update will be to 3.10 (to catch the fix in math.hypot).
-set (Python_VERSION_NUMBER 3.7 CACHE STRING "The minimum version of Python")
 find_package (Python ${Python_VERSION_NUMBER} COMPONENTS Interpreter)
 message (STATUS
   "Python found: ${Python_EXECUTABLE}, Version: ${Python_VERSION}")

@@ -105,7 +105,7 @@ class Geodesic:
   tol0_ = sys.float_info.epsilon
   tol1_ = 200 * tol0_
   tol2_ = math.sqrt(tol0_)
-  tolb_ = tol0_ * tol2_
+  tolb_ = tol0_
   xthresh_ = 1000 * tol2_
 
   CAP_NONE = GeodesicCapability.CAP_NONE
@@ -869,7 +869,7 @@ class Geodesic:
         salp1a = Geodesic.tiny_; calp1a = 1.0
         salp1b = Geodesic.tiny_; calp1b = -1.0
 
-        while numit < Geodesic.maxit2_:
+        while True:
           # the WGS84 test set: mean = 1.47, sd = 1.25, max = 16
           # WGS84 and random input: mean = 2.85, sd = 0.60
           (v, salp2, calp2, sig12, ssig1, csig1, ssig2, csig2,
@@ -878,7 +878,8 @@ class Geodesic:
              salp1, calp1, slam12, clam12, numit < Geodesic.maxit1_,
              C1a, C2a, C3a)
           # Reversed test to allow escape with NaNs
-          if tripb or not (abs(v) >= (8 if tripn else 1) * Geodesic.tol0_):
+          if (tripb or not (abs(v) >= (8 if tripn else 1) * Geodesic.tol0_) or
+              numit == Geodesic.maxit2_):
             break
           # Update bracketing values
           if v > 0 and (numit > Geodesic.maxit1_ or

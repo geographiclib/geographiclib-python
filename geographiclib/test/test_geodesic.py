@@ -572,6 +572,17 @@ class GeodSolveTest(unittest.TestCase):
     inv = geod.Inverse(0, 0, 60.0832522871723, 89.8492185074635, Geodesic.AREA)
     self.assertAlmostEqual(inv["S12"], 42426932221845, delta = 0.5)
 
+  def test_GeodSolve99(self):
+    """Test case
+    https://github.com/geographiclib/geographiclib-js/issues/3
+    Problem was that output of sincosd(+/-45) was inconsistent because
+    of directed rounding by Javascript's Math.round.  Python
+    implementation was OK."""
+    inv = Geodesic.WGS84.Inverse(45.0, 0.0, -45.0, 179.572719)
+    self.assertAlmostEqual(inv["azi1"],  90.00000028, delta = 1e-8  )
+    self.assertAlmostEqual(inv["azi2"],  90.00000028, delta = 1e-8  )
+    self.assertAlmostEqual(inv["s12"],  19987083.007, delta = 0.5e-3)
+
 class PlanimeterTest(unittest.TestCase):
   """Planimeter tests"""
 

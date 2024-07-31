@@ -31,6 +31,9 @@ python release -- authentication via ~/.pypirc
 PIP maintenance
   python -m pip install --upgrade build
   python -m pip install --upgrade twine
+  python -m pip install --upgrade sphinx
+  python -m pip install --upgrade sdist
+  python -m pip install --upgrade setuptools
 
 build invoked by make package
 twine invoked by make deploy-package
