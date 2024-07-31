@@ -6,7 +6,7 @@
 geographiclib
 =============
 
-Author: Charles F. F. Karney (charles@karney.com)
+Author: Charles F. F. Karney (karney@alum.mit.edu)
 
 Version: |version|
 
