@@ -15,9 +15,11 @@ if (LINT)
     --max-args=15
     --max-locals=76
     --max-statements=175
-    --max-public-methods=32
+    --max-public-methods=34
     --min-public-methods=0
     --min-similarity-lines=9
+    --max-nested-blocks=10
+    --max-positional-arguments=16
     --argument-naming-style=any
     --attr-naming-style=any
     --method-naming-style=any
@@ -28,8 +30,9 @@ if (LINT)
     # C0415 import outside toplevel (needed because of
     #   Geodesic+ GeodesicLine interdependency)
     # R0124 comparison with self (needed for nan test)
+    # R0401 Cyclic import
     # W0212 access to a protected member
-    -d C0321,C0325,C0415,R0124,W0212
+    -d C0321,C0325,C0415,R0124,R0401,W0212
     __init__.py ${PYTHON_FILES} ${TEST_FILES}
     COMMENT "Linting with ${LINT}")
 endif ()

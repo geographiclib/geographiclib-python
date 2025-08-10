@@ -226,7 +226,7 @@ class PolygonArea:
     More points can be added to the polygon after this call.
 
     """
-    if self.polyline: area = math.nan
+    area = math.nan
     if self.num < 2:
       perimeter = 0.0
       if not self.polyline: area = 0.0
@@ -260,7 +260,7 @@ class PolygonArea:
     :return: a tuple of number, perimeter (meters), area (meters^2)
 
     """
-    if self.polyline: area = math.nan
+    area = math.nan
     if self.num == 0:
       perimeter = 0.0
       if not self.polyline: area = 0.0

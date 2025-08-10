@@ -441,7 +441,7 @@ class Geodesic:
     # outmask & REDUCEDLENGTH: set m12b & m0
     # outmask & GEODESICSCALE: set M12 & M21
 
-    s12b = m12b = m0 = M12 = M21 = math.nan
+    s12b = m12b = m0 = m0x = J12 = M12 = M21 = math.nan
     if outmask & (Geodesic.DISTANCE | Geodesic.REDUCEDLENGTH |
                   Geodesic.GEODESICSCALE):
       A1 = Geodesic._A1m1f(eps)
