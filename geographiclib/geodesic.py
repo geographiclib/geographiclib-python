@@ -86,6 +86,7 @@ from geographiclib.geodesiccapability import GeodesicCapability
 class Geodesic:
   """Solve geodesic problems"""
 
+  WGS84: "Geodesic"
   GEOGRAPHICLIB_GEODESIC_ORDER = 6
   nA1_ = GEOGRAPHICLIB_GEODESIC_ORDER
   nC1_ = GEOGRAPHICLIB_GEODESIC_ORDER
