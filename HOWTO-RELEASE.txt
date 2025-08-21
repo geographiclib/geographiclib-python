@@ -52,3 +52,36 @@ Debian + Ubuntu maintainers:
   Francesco Paolo Lovergine
 
 conda-forge: https://anaconda.org/conda-forge/geographiclib
+
+conda-forge... (copied from geographiclib-cpp-feedstock)
+
+  geographiclib-feedstock
+  git pull
+  edit README.md recipe/meta.yaml
+  reset build number in meta.yaml to 0
+  needs patch file to ...
+  conda remove -y -n build --all
+  conda create -y -n build
+  conda activate build
+  conda install -y conda-build conda-verify conda-forge-pinning
+
+  in top level directory...
+  conda build recipe --variant-config-file $CONDA_PREFIX/conda_build_config.yaml
+  Package in ~/miniconda3/envs/build/conda-bld/linux-64/geographiclib-$VERSION-*.tar.bz2
+
+  conda deactivate
+  conda remove -y -n geog-test --all
+  conda create -y -n geog-test ~/miniconda3/envs/build/conda-bld/linux-64/geographiclib-$VERSION-*.tar.bz2
+  conda activate geog-test
+  type GeoConvert
+  GeoConvert --version
+
+  git checkout -b v$VERSION
+  commit changes
+  conda deactivate
+  conda activate build
+  conda install -y -c conda-forge conda-smithy
+  conda smithy rerender
+  commit changes with git commit -m "MNT: Re-rendered with conda-build...
+  git push --set-upstream cffk v$VERSION
+  conda deactivate

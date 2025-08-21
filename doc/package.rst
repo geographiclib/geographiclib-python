@@ -47,6 +47,8 @@ Other links
 Change log
 ----------
 
+* Version 2.1 (released 2025-08-21)
+
 * Version 2.0 (released 2022-04-23)
 
   * Minimum version of Python supported in 3.7.  Support for Python 2.x

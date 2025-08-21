@@ -1,4 +1,4 @@
-cmake_minimum_required (VERSION 3.13.0)
+cmake_minimum_required (VERSION 3.17.0)
 project (GeographicLib-Python NONE)
 
 # The project name for python
@@ -6,18 +6,18 @@ set (PYTHON_PROJECT_NAME geographiclib)
 
 # Version information
 set (PROJECT_VERSION_MAJOR 2)
-set (PROJECT_VERSION_MINOR 0)
-set (PROJECT_VERSION_PATCH 1)
+set (PROJECT_VERSION_MINOR 1)
+set (PROJECT_VERSION_PATCH 0)
 set (PROJECT_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}")
 if (PROJECT_VERSION_PATCH GREATER 0)
   set (PROJECT_VERSION "${PROJECT_VERSION}.${PROJECT_VERSION_PATCH}")
 endif ()
 # Follow Python conventions on the version suffix: {a,b,rc}N, see
 # https://www.python.org/dev/peps/pep-0440
-set (PROJECT_VERSION_SUFFIX "dev1")
+set (PROJECT_VERSION_SUFFIX ".dev1")
 set (PROJECT_FULLVERSION "${PROJECT_VERSION}${PROJECT_VERSION_SUFFIX}")
 
-set (RELEASE_DATE "2024-mm-dd")
+set (RELEASE_DATE "2025-08-21")
 
 # Set a default build type for single-configuration cmake generators if
 # no build type is set.
