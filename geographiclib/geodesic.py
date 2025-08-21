@@ -804,7 +804,7 @@ class Geodesic:
       #
       # In fact, we will have sig12 > pi/2 for meridional geodesic which is
       # not a shortest path.
-      if sig12 < 1 or m12x >= 0:
+      if sig12 < Geodesic.tol2_ or m12x >= 0:
         if (sig12 < 3 * Geodesic.tiny_ or
             # Prevent negative s12 or m12 for short lines
             (sig12 < Geodesic.tol0_ and (s12x < 0 or m12x < 0))):
