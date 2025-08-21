@@ -14,7 +14,7 @@ if (PROJECT_VERSION_PATCH GREATER 0)
 endif ()
 # Follow Python conventions on the version suffix: {a,b,rc}N, see
 # https://www.python.org/dev/peps/pep-0440
-set (PROJECT_VERSION_SUFFIX ".dev1")
+set (PROJECT_VERSION_SUFFIX "")
 set (PROJECT_FULLVERSION "${PROJECT_VERSION}${PROJECT_VERSION_SUFFIX}")
 
 set (RELEASE_DATE "2025-08-21")

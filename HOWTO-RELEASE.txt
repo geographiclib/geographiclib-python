@@ -20,7 +20,7 @@ https://pypi.org/project/geographiclib
 Version update checks
   CMakeLists.txt verson + date, change log + date in doc/package.rst
   remove devel versions from distrib-Python
-  make all lint sanitize
+  make all test lint sanitize
   make stage-{doc,dist}
   make deploy-{doc,dist}
   make deploy-package
