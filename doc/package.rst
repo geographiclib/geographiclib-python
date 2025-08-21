@@ -21,7 +21,7 @@ and install it with
 
 .. code-block:: sh
 
-  pip install geographiclib-2.0.tar.gz
+  pip install geographiclib-2.1.tar.gz
 
 It's a good idea to run the unit tests to verify that the installation
 worked OK by running
@@ -48,6 +48,11 @@ Change log
 ----------
 
 * Version 2.1 (released 2025-08-21)
+
+  * Fix bug in geodesic inverse problem with very prolate ellipsoids.
+  * Fix problem not being able to acceess attribute "WGS84"
+  * Relax bisection tolerance.
+  * Minor improvement in the logic for the geodesic inverse problem.
 
 * Version 2.0 (released 2022-04-23)
 

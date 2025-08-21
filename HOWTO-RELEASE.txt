@@ -18,13 +18,16 @@ cmake targets:
 https://pypi.org/project/geographiclib
 
 Version update checks
-  CMakeLists.txt verson + date, change log + date in doc/package.rst
+  CMakeLists.txt verson + date
+  package.rst update change log + version in pip install example
   remove devel versions from distrib-Python
-  make all test lint sanitize
+  make all test lint sanitize doc
   make stage-{doc,dist}
   make deploy-{doc,dist}
   make deploy-package
-
+  update ~/web/geographiclib-web/htdocs/Python/doc link
+  make deplay-doc
+  
 https://packaging.python.org/en/latest/tutorials/packaging-projects/#uploading-your-project-to-pypi
 
 python release -- authentication via ~/.pypirc
@@ -59,22 +62,32 @@ conda-forge... (copied from geographiclib-cpp-feedstock)
   git pull
   edit README.md recipe/meta.yaml
   reset build number in meta.yaml to 0
-  needs patch file to ...
   conda remove -y -n build --all
   conda create -y -n build
   conda activate build
   conda install -y conda-build conda-verify conda-forge-pinning
 
+  VERSION=2.1
   in top level directory...
   conda build recipe --variant-config-file $CONDA_PREFIX/conda_build_config.yaml
-  Package in ~/miniconda3/envs/build/conda-bld/linux-64/geographiclib-$VERSION-*.tar.bz2
+  Package in ~/miniconda3/envs/build/conda-bld/noarch/geographiclib-$VERSION-*.conda
 
   conda deactivate
   conda remove -y -n geog-test --all
-  conda create -y -n geog-test ~/miniconda3/envs/build/conda-bld/linux-64/geographiclib-$VERSION-*.tar.bz2
+  conda create -y -n geog-test
   conda activate geog-test
-  type GeoConvert
-  GeoConvert --version
+  conda install -y python
+  conda install -y ~/miniconda3/envs/build/conda-bld/noarch/geographiclib-$VERSION-*.conda
+
+  python <<EOF
+from geographiclib.geodesic import Geodesic
+import math
+geod = Geodesic.WGS84
+g = geod.Inverse(-41.32, 174.81, 40.96, -5.50)
+print("The distance is {:.3f} m.".format(g['s12']))
+EOF
+
+=> The distance is 19959679.267 m.
 
   git checkout -b v$VERSION
   commit changes
@@ -83,5 +96,6 @@ conda-forge... (copied from geographiclib-cpp-feedstock)
   conda install -y -c conda-forge conda-smithy
   conda smithy rerender
   commit changes with git commit -m "MNT: Re-rendered with conda-build...
+    commit message given by rerender command
   git push --set-upstream cffk v$VERSION
   conda deactivate
