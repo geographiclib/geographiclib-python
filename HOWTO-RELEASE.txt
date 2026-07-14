@@ -18,7 +18,7 @@ cmake targets:
 https://pypi.org/project/geographiclib
 
 Version update checks
-  CMakeLists.txt verson + date
+  CMakeLists.txt version + date
   package.rst update change log + version in pip install example
   remove devel versions from distrib-Python
   make all test lint sanitize doc
